@@ -78,8 +78,11 @@ publishing {
     }
 }
 
-signing  {
-    useInMemoryPgpKeys(System.getenv("SIGNING_KEY"), System.getenv("SIGNING_PASSWORD"))
+signing {
+    useInMemoryPgpKeys(
+        rootProject.findProperty("SIGNING_KEY") as? String ?: System.getenv("SIGNING_KEY"),
+        rootProject.findProperty("SIGNING_PASSWORD") as? String ?: System.getenv("SIGNING_PASSWORD")
+    )
     sign(publishing.publications["maven"])
 }
 
@@ -89,8 +92,8 @@ publishing {
             name = "sonatype"
             url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                username = System.getenv("SONATYPE_USERNAME")
-                password = System.getenv("SONATYPE_PASSWORD")
+                username = rootProject.findProperty("SONATYPE_USERNAME") as? String ?: System.getenv("SONATYPE_USERNAME")
+                password = rootProject.findProperty("SONATYPE_PASSWORD") as? String ?: System.getenv("SONATYPE_PASSWORD")
             }
         }
     }
