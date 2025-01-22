@@ -3,6 +3,7 @@ plugins {
     kotlin("jvm")
     alias(libs.plugins.kotlin.seialization)
     id("maven-publish")
+    id("signing")
     `java-gradle-plugin`
 }
 
@@ -75,9 +76,23 @@ publishing {
             }
         }
     }
+}
 
+signing  {
+    useInMemoryPgpKeys(System.getenv("SIGNING_KEY"), System.getenv("SIGNING_PASSWORD"))
+    sign(publishing.publications["maven"])
+}
+
+publishing {
     repositories {
-        mavenLocal()
+        maven {
+            name = "sonatype"
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = System.getenv("SONATYPE_USERNAME")
+                password = System.getenv("SONATYPE_PASSWORD")
+            }
+        }
     }
 }
 
