@@ -5,7 +5,6 @@ plugins {
     kotlin("jvm")
     alias(libs.plugins.kotlin.seialization)
     id("maven-publish")
-    id("signing")
     alias(libs.plugins.vanniktech)
     `java-gradle-plugin`
 }
