@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.seialization)
     id("maven-publish")
     id("signing")
+    alias(libs.plugins.vanniktech)
     `java-gradle-plugin`
 }
 
@@ -34,10 +35,6 @@ dependencies {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
-}
-
-tasks.named("test") {
-    dependsOn("publishToMavenLocal")
 }
 
 publishing {
@@ -80,24 +77,12 @@ publishing {
 
 signing {
     useInMemoryPgpKeys(
-        rootProject.findProperty("SIGNING_KEY") as? String ?: System.getenv("SIGNING_KEY"),
-        rootProject.findProperty("SIGNING_PASSWORD") as? String ?: System.getenv("SIGNING_PASSWORD")
+        System.getenv("SIGNING_KEY"),
+        System.getenv("SIGNING_PASSWORD")
     )
     sign(publishing.publications["maven"])
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "sonatype"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = rootProject.findProperty("SONATYPE_USERNAME") as? String ?: System.getenv("SONATYPE_USERNAME")
-                password = rootProject.findProperty("SONATYPE_PASSWORD") as? String ?: System.getenv("SONATYPE_PASSWORD")
-            }
-        }
-    }
-}
 
 tasks.test {
     useJUnitPlatform()
