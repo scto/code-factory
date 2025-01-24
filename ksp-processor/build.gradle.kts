@@ -9,7 +9,7 @@ plugins {
     `java-gradle-plugin`
 }
 
-group = "com.code.factory"
+group = "io.github.antonbutov"
 version = "0.0.1"
 
 dependencies {
@@ -77,53 +77,6 @@ mavenPublishing {
         }
     }
 }
-
-//publishing {
- //   publications {
- //       create<MavenPublication>("maven") {
-  //          from(components["kotlin"])
-  //          artifactId = project.name
-  //          version = project.version.toString()
-  //          groupId = project.group.toString()
-//
-  //          pom {
-  //              name.set("Code factory")
- //               description.set("You wrote tests, then AI generates code.")
-  //              url.set("https://github.com/AntonButov/code-factory")
- //               scm {
- //                   url.set("https://github.com/AntonButov/code-factory")
- //               }
- //               licenses {
- //                   license {
- //                       name.set("The Apache License, Version 2.0")
- //                       url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
- //                   }
- //               }
- //               developers {
- //                   developer {
-  //                      id.set("antonbutov")
-  //                      name.set("Anton Butov")
- //                       email.set("butov6101@gmail.com")
- //                   }
- //               }
- //               scm {
- //                   connection.set("scm:git:git://github.com/AntonButov/code-factory.git")
- //                   developerConnection.set("scm:git:ssh://git@github.com:AntonButov/code-factory.git")
- //                   url.set("https://github.com/AntonButov/code-factory")
- //               }
- //           }
- //       }
- //   }
-//}
-
-//signing {
-//    useInMemoryPgpKeys(
-//        System.getenv("SIGNING_KEY"),
-//        System.getenv("SIGNING_PASSWORD")
-//    )
-//    sign(publishing.publications["maven"])
-//}
-
 
 tasks.test {
     useJUnitPlatform()
