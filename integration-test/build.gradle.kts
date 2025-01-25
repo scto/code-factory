@@ -7,8 +7,6 @@ repositories {
     google()
 }
 
-version = "1.0-SNAPSHOT"
-
 dependencies {
     implementation(kotlin("stdlib"))
     "ksp"(project(":code-factory-processor"))
