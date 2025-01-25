@@ -3,6 +3,25 @@ Write your tests, and let AI generate the code.
 
 If changes are needed, simply update the tests, and AI will regenerate the code to meet the new requirements.
 
+# Setup
+
+```agsl
+repositories {
+    mavenCentral()
+}
+
+plugins {
+    id 'com.google.devtools.ksp' version '1.9.24-1.0.20'
+}
+
+dependencies {
+    ksp("io.github.antonbutov:code-factory-processor:<last vertion>")
+    testImplementation 'junit:junit:4.13.2'
+}
+
+
+```
+
 ## Contributions Welcome! 
 We're looking for skilled contributors, especially those with expertise in AI and Kotlin. Join us in enhancing Code Factory's capabilities!
 
