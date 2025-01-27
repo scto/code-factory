@@ -10,6 +10,7 @@ kotest = "5.6.2"
 mockk = "1.13.5"
 kotestRunnerJunit5Jvm = "5.9.0"
 openaiKotlinBom = "3.8.2"
+vanniktech="0.30.0"
 
 [libraries]
 kotlin-kspApi = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
@@ -34,3 +35,4 @@ kotest-runner-junit5-jvm = { group = "io.kotest", name = "kotest-runner-junit5-j
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-seialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+vanniktech = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech" }

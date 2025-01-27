@@ -16,6 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "code-factory"
 
-include("ksp-processor")
+include("code-factory-processor")
 include("utils")
 include("integration-test")
