@@ -32,7 +32,7 @@ class KspProcessorProvider(
             codeResolver = codeResolver,
             bridgeFactory = bridgeFactory(
                 storage = storage(),
-                path = environment.options["localPropertiesPath"] ?: error("Loading localPropertiesPath failed"),
+                path = basePathProvider(environment.codeGenerator).getBasePath(),
                 logger = environment.logger,
                 codeResolver = codeResolver(),
                 compileChecker = compileChecker(environment.logger)

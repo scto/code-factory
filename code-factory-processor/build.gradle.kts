@@ -84,6 +84,3 @@ tasks.test {
 kotlin {
     jvmToolchain(21)
 }
-ksp {
-    arg("localPropertiesPath", rootDir.path)
-}
