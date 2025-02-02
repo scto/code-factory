@@ -3,7 +3,7 @@ Write your tests, and let AI generate the code.
 
 If changes are needed, simply update the tests, and AI will regenerate the code to meet the new requirements.
 
-## Create a `keystore.properties` file and add the following.
+## Create a `local.properties` file and add the following.
 ```
 API_KEY="sk-proj-mSwcp..."
 ```
