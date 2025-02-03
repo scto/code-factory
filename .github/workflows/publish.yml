@@ -1,0 +1,41 @@
+name: Publish to Maven Central
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Триггер на теги, соответствующие шаблону v1.0.0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 11
+
+      - name: Set up GPG
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.SIGNING_KEY }}
+          PASSPHRASE: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
+          echo "default-cache-ttl 600" >> ~/.gnupg/gpg-agent.conf
+          echo "max-cache-ttl 7200" >> ~/.gnupg/gpg-agent.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          gpg --list-keys
+
+      - name: Publish to Maven Central
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+        run: ./gradlew publish --no-daemon --no-parallel
