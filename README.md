@@ -12,7 +12,7 @@ API_KEY="sk-proj-mSwcp..."
 2. Kotlin (KTS)
 ```
 plugins {
-    id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+    id("com.google.devtools.ksp") version "1.9.24-1.0.20"
 }
 ``` 
 3. Add dependencies
