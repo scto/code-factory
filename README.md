@@ -3,10 +3,22 @@ Write your tests, and let AI generate the code.
 
 If changes are needed, simply update the tests, and AI will regenerate the code to meet the new requirements.
 
-## Create a `local.properties` file and add the following.
+## Setup
+
+1. Create a `local.properties` file and add the following.
 ```
 API_KEY="sk-proj-mSwcp..."
 ```
+2. Kotlin (KTS)
+```
+plugins {
+    id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+}
+``` 
+3. Add dependencies
+dependencies {
+    ksp("com.github.skydoves:sealedx-processor:0.0.2")
+}
 
 ## Contributions Welcome! 
 We're looking for skilled contributors, especially those with expertise in AI and Kotlin. Join us in enhancing Code Factory's capabilities!
