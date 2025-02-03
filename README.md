@@ -5,7 +5,7 @@ If changes are needed, simply update the tests, and AI will regenerate the code 
 
 ## Setup
 
-1. Create a `local.properties` file and add the following.
+1. Create a `local.properties` file and add the following:
 ```
 API_KEY="sk-proj-mSwcp..."
 ```
@@ -16,9 +16,11 @@ plugins {
 }
 ``` 
 3. Add dependencies
+```
 dependencies {
     ksp("com.github.skydoves:sealedx-processor:0.0.2")
 }
+```
 
 ## Contributions Welcome! 
 We're looking for skilled contributors, especially those with expertise in AI and Kotlin. Join us in enhancing Code Factory's capabilities!
