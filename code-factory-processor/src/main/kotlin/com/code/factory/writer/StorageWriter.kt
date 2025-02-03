@@ -15,7 +15,7 @@ interface StorageWriter {
 fun storageWriter(): StorageWriter = StorageWriterImpl()
 
 
-private val kotlinPathDir = File("tmp/kotlinPath")
+private val kotlinPathDir = File("build/tmp/kotlinPath")
 private val kotlinPathFile = File(kotlinPathDir, "KotlinPath.txt")
 
     class StorageWriterImpl: StorageWriter {

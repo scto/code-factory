@@ -16,10 +16,10 @@ interface Storage {
 
 fun storage(): Storage = StorageImp()
 
-private val allDeclarationsDir = File("tmp/code-factory")
+private val allDeclarationsDir = File("build/tmp/code-factory")
 private val allDeclarationsFile = File(allDeclarationsDir, "AllDeclarations.txt")
 
-private val interfaceWithOutDeclarationDir = File("tmp/code-factory")
+private val interfaceWithOutDeclarationDir = File("build/tmp/code-factory")
 private val interfaceWithOutDeclarationFile = File(interfaceWithOutDeclarationDir, "InterfaceWithOutImplementation.txt")
 
 

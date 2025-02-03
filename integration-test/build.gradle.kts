@@ -20,7 +20,3 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotest.runner.junit5.jvm)
 }
-
-ksp {
-    arg("localPropertiesPath", rootDir.path)
-}
