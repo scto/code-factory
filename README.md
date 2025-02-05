@@ -18,7 +18,7 @@ plugins {
 3. Add dependencies
 ```
 dependencies {
-    ksp("com.github.skydoves:sealedx-processor:0.0.2")
+    ksp("io.github.antonbutov:code-factory-processor:0.0.2")
 }
 ```
 
