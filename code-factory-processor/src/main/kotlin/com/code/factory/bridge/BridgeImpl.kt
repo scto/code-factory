@@ -2,15 +2,13 @@ package com.code.factory.bridge
 
 import Storage
 import com.code.factory.CompileChecker
-import com.code.factory.CompileCheckerImpl
 import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.compileChecker
 import com.code.factory.writer.WriterData
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import removeChatComment
 
-internal class BridgeMainImpl(
+internal class BridgeMainWork(
     private val storage: Storage,
     private val codeResolver: CodeResolver,
 ) : Bridge.BridgeMain {
@@ -32,7 +30,7 @@ internal class BridgeMainImpl(
     }
 }
 
-internal class BridgeTestImpl(
+internal class BridgeTestWork(
     private val codeResolver: CodeResolver,
     private val storage: Storage,
     private val openAi: OpenAiService,
@@ -55,7 +53,9 @@ internal class BridgeTestImpl(
     }
 }
 
-internal class BridgeTestImplMock(
+internal class BridgeGeneratedWork : Bridge.BridgeGenerated
+
+internal class BridgeTestMock(
     private val storage: Storage,
 ) : Bridge.BridgeTest {
     override suspend fun getCode(testDeclarations: List<KSDeclaration>): WriterData? {
@@ -74,17 +74,5 @@ internal class BridgeTestImplMock(
     }
 }
 
-internal class BridgeGeneratedImpl : Bridge.BridgeGenerated
+internal class BridgeGeneratedMock(): Bridge.BridgeGenerated
 
-internal class BridgeMainImplMock() : Bridge.BridgeMain {
-
-    override fun saveAllDeclarations(
-        saveAllDeclarations: List<KSDeclaration>,
-    ) {
-        // do nothing
-    }
-
-    override fun saveInterFaceWithOutDeclaration(interfaceWithOutImpl: KSClassDeclaration) {
-        // do nothing
-    }
-}
