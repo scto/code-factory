@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.antonbutov"
-version = "0.0.2"
+version = "0.0.4"
 
 dependencies {
     ksp(libs.autoservice.ksp)
@@ -82,5 +82,5 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
