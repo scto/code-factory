@@ -18,7 +18,34 @@ plugins {
 3. Add dependencies
 ```
 dependencies {
-    ksp("io.github.antonbutov:code-factory-processor:$"last_version"")
+    ksp("io.github.antonbutov:code-factory-processor:$last_version")
+}
+```
+## How it works
+1. Create an interface without an implementation
+```
+interface ForGenerate {
+    fun plus(first: Int, second: Int): Int
+}
+```   
+2. Write a test with not implemented implementation
+``` 
+class GeneratedTest {
+
+    @Test
+    fun generatedFileGets() {
+       val forGenerate: ForGenerate = GeneratedCode()
+       val expected = forGenerate.plus(2, 2)
+       assertEquals(4, expected)
+    }
+}
+```
+3. Build the module🚀. The plugin has to generate
+```
+class GeneratedCode(): ForGenerate {
+    override fun plus(first: Int, second: Int): Int {
+    return first + second
+    }
 }
 ```
 
