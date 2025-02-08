@@ -1,3 +1,11 @@
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/antonbutov/code-factory)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.antonbutov/code-factory-processor)
+![GitHub issues](https://img.shields.io/github/issues/antonbutov/code-factory)
+![License](https://img.shields.io/github/license/antonbutov/code-factory)
+![Kotlin Version](https://img.shields.io/badge/Kotlin-1.9.24-blue?logo=kotlin)
+![KSP](https://img.shields.io/badge/KSP-Supported-green)
+![GitHub stars](https://img.shields.io/github/stars/antonbutov/code-factory?style=social)
+
 # Code Factory
 Write your tests, and let AI generate the code.
 
