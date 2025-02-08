@@ -1,10 +1,8 @@
 package com.code.factory.bridge
 
 import Storage
-import com.aallam.openai.client.OpenAI
 import com.code.factory.CompileChecker
 import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.ksp.Phases
 import com.code.factory.writer.WriterData
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -48,28 +46,40 @@ internal class BridgeFactoryImpl(
     private val path: String
 ) : BridgeFactory {
 
+    @get:JvmName("getApiKeyProperty")
+    private val apiKey: String by lazy { getApiKey() }
+
     override fun createMain(): Bridge.BridgeMain =
-        getApiKey()?.let {
-            BridgeMainImplMock()
-        } ?: BridgeMainImpl(storage, codeResolver)
+        keyLogic(
+            mock = BridgeMainWork(storage, codeResolver),
+            work = BridgeMainWork(storage, codeResolver),
+        )
 
     override fun createTest(): Bridge.BridgeTest =
-        getApiKey()?.let {
-            BridgeTestImpl(codeResolver, storage, openAiService(it, logger), compileChecker)
-        } ?: BridgeTestImplMock(storage)
+        keyLogic(
+            mock = BridgeTestMock(storage),
+            work = BridgeTestWork(codeResolver, storage, openAiService(apiKey, logger), compileChecker),
+        )
 
     override fun createGenerated(): Bridge.BridgeGenerated =
-        getApiKey()?.let {
-            BridgeGeneratedImpl()
-        } ?: BridgeGeneratedImpl()
+        keyLogic(
+            mock = BridgeGeneratedMock(),
+            work = BridgeGeneratedWork()
+            )
 
-    private fun getApiKey(): String? =
-        loadLocalProperties(path)?.getProperty("API_KEY").also {
-            it ?: logger.warn("BridgeImplMock work")
+    private fun <B : Bridge> keyLogic(mock: B, work: B): B {
+        return when (apiKey) {
+            "test" -> mock
+            else -> work
         }
+    }
+
+    private fun getApiKey(): String =
+        loadLocalProperties(path).getProperty("API_KEY")
+            ?: error("API_KEY not found in local.properties")
 }
 
-private fun loadLocalProperties(path: String): Properties? {
+private fun loadLocalProperties(path: String): Properties {
     val properties = Properties()
     val localPropertiesFile = File(path, "local.properties")
     return properties
@@ -77,5 +87,5 @@ private fun loadLocalProperties(path: String): Properties? {
             localPropertiesFile.exists()
         }?.also {
             it.load(localPropertiesFile.inputStream())
-        }
+        } ?: error("local.properties file not found")
 }

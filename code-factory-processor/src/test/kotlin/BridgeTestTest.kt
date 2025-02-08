@@ -1,6 +1,6 @@
 import com.code.factory.CompileChecker
 import com.code.factory.bridge.Bridge
-import com.code.factory.bridge.BridgeTestImpl
+import com.code.factory.bridge.BridgeTestWork
 import com.code.factory.bridge.OpenAiService
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.writer.WriterData
@@ -28,7 +28,7 @@ class BridgeTestTest: StringSpec({
         storage = mockk(relaxed = true)
         codeResolver = mockk(relaxed = true)
         compileChecker = mockk(relaxed = true)
-        bridgeTest = BridgeTestImpl(
+        bridgeTest = BridgeTestWork(
             codeResolver = codeResolver,
             storage = storage,
             openAi = openAi,
