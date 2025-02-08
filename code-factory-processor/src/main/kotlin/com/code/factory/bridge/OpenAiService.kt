@@ -37,16 +37,21 @@ internal class OpenAiServiceImpl(
                     content = "$USER_ASK_FIRST $interfaceForCode $USER_ASK_SECOND"
                 )
             )
-        )
+        ).also {
+            logger.warn(
+                "Request -->: \n" +
+                        "${
+                            it.messages.map {
+                                it.content + "\n"
+                            }
+                        }"
+            )
+        }
         val code = openAi.chatCompletion(chatCompletionRequest).choices.first().message.content ?: ""
         return code.also {
             logger.warn(
-                "Request: \n" +
-                "${chatCompletionRequest.messages.map {
-                    it.content + "\n"
-                }}" +
-                "response:\n" +
-                "$code\n"
+                "response <--:\n" +
+                        "$code\n"
             )
         }
     }
