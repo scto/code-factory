@@ -1,3 +1,4 @@
+![](https://github.com/AntonButov/code-factory/blob/trunk/codeFactoryIcon.png)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/antonbutov/code-factory)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.antonbutov/code-factory-processor)
 ![GitHub issues](https://img.shields.io/github/issues/antonbutov/code-factory)
