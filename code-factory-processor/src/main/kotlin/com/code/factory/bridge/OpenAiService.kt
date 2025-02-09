@@ -47,7 +47,7 @@ internal class OpenAiServiceImpl(
                     ),
             ).also {
                 logger.warn(
-                    "Request -->: \n" +
+                    "Request: ----> \n" +
                         "${
                             it.messages.map {
                                 it.content + "\n"
@@ -58,7 +58,7 @@ internal class OpenAiServiceImpl(
         val code = openAi.chatCompletion(chatCompletionRequest).choices.first().message.content ?: ""
         return code.also {
             logger.warn(
-                "response <--:\n" +
+                "response: <----\n" +
                     "$code\n",
             )
         }

@@ -12,7 +12,7 @@ fun basePathProvider(codeGenerator: CodeGenerator): BasePathProvider = BasePathP
 // #62
 class BasePathProviderImpl(private val codeGenerator: CodeGenerator) : BasePathProvider {
     override fun getBasePath(): String {
-        codeGenerator.createNewFile(Dependencies.ALL_FILES, "", "tempFile") // #61
+        codeGenerator.createNewFile(Dependencies.ALL_FILES, "", "tempFile", "bin") // #61
         val emptyFile = codeGenerator.generatedFile.first()
         val emptyFilePath = emptyFile.path
         return emptyFilePath.split("build").first()
