@@ -8,8 +8,9 @@ interface BasePathProvider {
 }
 
 fun basePathProvider(codeGenerator: CodeGenerator): BasePathProvider = BasePathProviderImpl(codeGenerator)
+
 // #62
-class BasePathProviderImpl(private val codeGenerator: CodeGenerator): BasePathProvider {
+class BasePathProviderImpl(private val codeGenerator: CodeGenerator) : BasePathProvider {
     override fun getBasePath(): String {
         codeGenerator.createNewFile(Dependencies.ALL_FILES, "", "tempFile") // #61
         val emptyFile = codeGenerator.generatedFile.first()

@@ -13,51 +13,63 @@ private const val USER_ASK_SECOND = "Return only code implementation please."
 private const val MODEL = "gpt-4"
 
 interface OpenAiService {
-    suspend fun getCode(context: String, interfaceForCode: String): String
+    suspend fun getCode(
+        context: String,
+        interfaceForCode: String,
+    ): String
 }
 
 internal class OpenAiServiceImpl(
     private val openAi: OpenAI,
-    private val logger: KSPLogger
+    private val logger: KSPLogger,
 ) : OpenAiService {
-    override suspend fun getCode(context: String, interfaceForCode: String): String {
-        val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId(MODEL),
-            messages = listOf(
-                ChatMessage(
-                    role = ChatRole.System,
-                    content = SYSTEM
-                ),
-                ChatMessage(
-                    role = ChatRole.User,
-                    content = context
-                ),
-                ChatMessage(
-                    role = ChatRole.User,
-                    content = "$USER_ASK_FIRST $interfaceForCode $USER_ASK_SECOND"
-                )
-            )
-        ).also {
-            logger.warn(
-                "Request -->: \n" +
+    override suspend fun getCode(
+        context: String,
+        interfaceForCode: String,
+    ): String {
+        val chatCompletionRequest =
+            ChatCompletionRequest(
+                model = ModelId(MODEL),
+                messages =
+                    listOf(
+                        ChatMessage(
+                            role = ChatRole.System,
+                            content = SYSTEM,
+                        ),
+                        ChatMessage(
+                            role = ChatRole.User,
+                            content = context,
+                        ),
+                        ChatMessage(
+                            role = ChatRole.User,
+                            content = "$USER_ASK_FIRST $interfaceForCode $USER_ASK_SECOND",
+                        ),
+                    ),
+            ).also {
+                logger.warn(
+                    "Request -->: \n" +
                         "${
                             it.messages.map {
                                 it.content + "\n"
                             }
-                        }"
-            )
-        }
+                        }",
+                )
+            }
         val code = openAi.chatCompletion(chatCompletionRequest).choices.first().message.content ?: ""
         return code.also {
             logger.warn(
                 "response <--:\n" +
-                        "$code\n"
+                    "$code\n",
             )
         }
     }
 }
 
-fun openAiService(apiKey: String, logger: KSPLogger): OpenAiService = OpenAiServiceImpl(
-    openAi = OpenAI(apiKey),
-    logger = logger
-)
+fun openAiService(
+    apiKey: String,
+    logger: KSPLogger,
+): OpenAiService =
+    OpenAiServiceImpl(
+        openAi = OpenAI(apiKey),
+        logger = logger,
+    )

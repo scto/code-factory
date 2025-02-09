@@ -1,10 +1,11 @@
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.string.shouldContain
 
-class RemoveKotlinTest: StringSpec ({
+class RemoveKotlinTest : StringSpec({
 
     "remove Kotlin" {
-        val inPutString = """
+        val inPutString =
+            """
             Sure, here is an implementation of the given interface:
             
             ```kotlin
@@ -15,18 +16,18 @@ class RemoveKotlinTest: StringSpec ({
                 }
             }
             ```
-        """.trimIndent()
+            """.trimIndent()
 
-        val expectedResult = """
+        val expectedResult =
+            """
             class Context : ForGenerate {
 
                 override fun generate() {
                     // your implementation here
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         inPutString.removeChatComment() shouldContain expectedResult
     }
-
 })

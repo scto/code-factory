@@ -15,6 +15,8 @@ class PhaseResolverImpl : PhaseResolver {
 
 sealed class Phases {
     data object Generated : Phases()
+
     data object Tests : Phases()
+
     data object Main : Phases()
 }

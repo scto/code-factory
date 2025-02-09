@@ -12,20 +12,18 @@ internal class BridgeMainWork(
     private val storage: Storage,
     private val codeResolver: CodeResolver,
 ) : Bridge.BridgeMain {
-
-    override fun saveAllDeclarations(
-        allDeclarations: List<KSDeclaration>,
-    ) {
+    override fun saveAllDeclarations(allDeclarations: List<KSDeclaration>) {
         val allDeclarationsCode = codeResolver.getCodeString(allDeclarations).joinToString("\n")
         storage.addDeclarations(allDeclarationsCode)
     }
 
     override fun saveInterFaceWithOutDeclaration(interfaceWithOutImpl: KSClassDeclaration) {
-        val writerData = WriterData(
-            code = interfaceWithOutImpl.toString(),
-            packageName = interfaceWithOutImpl.packageName.asString(),
-            name = interfaceWithOutImpl.simpleName.asString()
-        )
+        val writerData =
+            WriterData(
+                code = interfaceWithOutImpl.toString(),
+                packageName = interfaceWithOutImpl.packageName.asString(),
+                name = interfaceWithOutImpl.simpleName.asString(),
+            )
         storage.setInterfaceWithOutImplementation(writerData)
     }
 }
@@ -34,7 +32,7 @@ internal class BridgeTestWork(
     private val codeResolver: CodeResolver,
     private val storage: Storage,
     private val openAi: OpenAiService,
-    private val compileChecker: CompileChecker
+    private val compileChecker: CompileChecker,
 ) : Bridge.BridgeTest {
     override suspend fun getCode(testDeclarations: List<KSDeclaration>): WriterData? {
         val writeData = storage.getInterfaceWithOutImplementation() ?: return null
@@ -48,7 +46,7 @@ internal class BridgeTestWork(
         return WriterData(
             code = code,
             packageName = writeData.packageName,
-            name = writeData.name
+            name = writeData.name,
         )
     }
 }
@@ -61,18 +59,18 @@ internal class BridgeTestMock(
     override suspend fun getCode(testDeclarations: List<KSDeclaration>): WriterData? {
         val writeData = storage.getInterfaceWithOutImplementation() ?: return null
         return WriterData(
-            code = """
-            class GeneratedCode(): ForGenerate {
-                override fun plus(first: Int, second: Int): Int {
-                return first + second
+            code =
+                """
+                class GeneratedCode(): ForGenerate {
+                    override fun plus(first: Int, second: Int): Int {
+                    return first + second
+                    }
                 }
-            }
-        """.trimIndent(),
+                """.trimIndent(),
             packageName = writeData.packageName,
-            name = writeData.name
+            name = writeData.name,
         )
     }
 }
 
-internal class BridgeGeneratedMock(): Bridge.BridgeGenerated
-
+internal class BridgeGeneratedMock() : Bridge.BridgeGenerated

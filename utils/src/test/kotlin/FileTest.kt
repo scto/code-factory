@@ -4,7 +4,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
 class FileTest {
-
     @Test
     fun `when save to file file should exist`() {
         val tempFile = "file.kt"
@@ -20,5 +19,4 @@ class FileTest {
         File.removeTempFile(tempFile)
         assertFalse { File.isTempFileExist(tempFile) }
     }
-
 }

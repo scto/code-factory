@@ -4,16 +4,16 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class CompilationForAssertationTest {
-
     @Test
     fun `correct code should compile`() {
-        val correctCode = """
+        val correctCode =
+            """
             class Test {
                 fun test() {
                     return "test"
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
         compilationForAssertations(correctCode) {
             assertTrue { true }
         }

@@ -42,7 +42,7 @@ mavenPublishing {
     coordinates(
         groupId = project.group.toString(),
         artifactId = project.name,
-        version = project.version.toString()
+        version = project.version.toString(),
     )
 
     mavenPublishing {

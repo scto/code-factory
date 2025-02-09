@@ -10,7 +10,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 
-class BridgeTestTest: StringSpec({
+class BridgeTestTest : StringSpec({
 
     lateinit var bridgeTest: Bridge.BridgeTest
     lateinit var openAi: OpenAiService
@@ -20,27 +20,30 @@ class BridgeTestTest: StringSpec({
 
     beforeTest {
         openAi = mockk(relaxed = true)
-        coEvery { openAi.getCode(any(), any()) } returns """
+        coEvery { openAi.getCode(any(), any()) } returns
+            """
             ```kotlin
             AiCode
             ```
-        """.trimIndent()
+            """.trimIndent()
         storage = mockk(relaxed = true)
         codeResolver = mockk(relaxed = true)
         compileChecker = mockk(relaxed = true)
-        bridgeTest = BridgeTestWork(
-            codeResolver = codeResolver,
-            storage = storage,
-            openAi = openAi,
-            compileChecker = compileChecker
-        )
+        bridgeTest =
+            BridgeTestWork(
+                codeResolver = codeResolver,
+                storage = storage,
+                openAi = openAi,
+                compileChecker = compileChecker,
+            )
     }
 
-    val writeData = WriterData(
-        code = "I am code.",
-        packageName = "PackageName",
-        name = "Name"
-    )
+    val writeData =
+        WriterData(
+            code = "I am code.",
+            packageName = "PackageName",
+            name = "Name",
+        )
 
     "when InterfaceFinder find interfaces bridge should to request code resolver for resolve it" {
         every {
@@ -50,7 +53,7 @@ class BridgeTestTest: StringSpec({
             storage.getInterfaceWithOutImplementation()
         } returns writeData
         val writeData = bridgeTest.getCode(mockk(relaxed = true))
-        writeData!!.code shouldBe  "AiCode"
+        writeData!!.code shouldBe "AiCode"
     }
 
     "when allDeclarations is empty code should generate" {
@@ -61,7 +64,7 @@ class BridgeTestTest: StringSpec({
             storage.getInterfaceWithOutImplementation()
         } returns writeData
         val writeData = bridgeTest.getCode(mockk(relaxed = true))
-        writeData!!.code shouldBe  "AiCode"
+        writeData!!.code shouldBe "AiCode"
     }
 
     "when interfaceWithOutImplementation is null get code should return null" {
@@ -74,5 +77,4 @@ class BridgeTestTest: StringSpec({
         val writeData = bridgeTest.getCode(mockk(relaxed = true))
         writeData shouldBe null
     }
-
 })

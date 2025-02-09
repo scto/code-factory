@@ -1,5 +1,4 @@
 import com.code.factory.writer.WriterData
-import io.ktor.client.plugins.cache.storage.FileStorage
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.kotlin.konan.file.File
@@ -8,9 +7,13 @@ import kotlin.io.path.Path
 
 interface Storage {
     fun getAllDeclaration(): String?
+
     fun addDeclarations(declarationsCode: String)
+
     fun getInterfaceWithOutImplementation(): WriterData?
+
     fun setInterfaceWithOutImplementation(writerData: WriterData)
+
     fun clean()
 }
 
@@ -22,9 +25,7 @@ private val allDeclarationsFile = File(allDeclarationsDir, "AllDeclarations.txt"
 private val interfaceWithOutDeclarationDir = File("build/tmp/code-factory")
 private val interfaceWithOutDeclarationFile = File(interfaceWithOutDeclarationDir, "InterfaceWithOutImplementation.txt")
 
-
 internal class StorageImp() : Storage {
-
     private var allDeclarations: String? = readAllDeclarations()
     private var interfaceWithOutImplementation: WriterData? = readInterfaceWithOutImplementation()
 

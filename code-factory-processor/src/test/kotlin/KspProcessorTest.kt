@@ -44,16 +44,17 @@ class KspProcessorTest : StringSpec({
         interfaceFinder = mockk(relaxed = true)
         compileChecker = mockk(relaxed = true)
         phaseResolver = mockk(relaxed = true)
-        kspProcessor = KspProcessor(
-            logger = mockk(relaxed = true),
-            writer = mockk(relaxed = true),
-            allDeclarationFinder = allDeclarationFinder,
-            interfaceFinder = interfaceFinder,
-            codeResolver = codeResolver,
-            bridgeFactory = bridgeFactory,
-            compileChecker = compileChecker,
-            phaseResolver = phaseResolver,
-        )
+        kspProcessor =
+            KspProcessor(
+                logger = mockk(relaxed = true),
+                writer = mockk(relaxed = true),
+                allDeclarationFinder = allDeclarationFinder,
+                interfaceFinder = interfaceFinder,
+                codeResolver = codeResolver,
+                bridgeFactory = bridgeFactory,
+                compileChecker = compileChecker,
+                phaseResolver = phaseResolver,
+            )
     }
 
     "when phase main should work bridge main" {

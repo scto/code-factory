@@ -18,7 +18,7 @@ internal class InterfaceFinderImpl() : InterfaceFinder {
             classes.none { classItem ->
                 classItem.superTypes.any { superType ->
                     superType.resolve().declaration.qualifiedName?.asString() ==
-                            interfaceItem.qualifiedName?.asString()
+                        interfaceItem.qualifiedName?.asString()
                 }
             }
         }

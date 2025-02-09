@@ -8,18 +8,20 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import java.io.File
-import java.util.*
+import java.util.Properties
 
 interface BridgeFactory {
     fun createMain(): Bridge.BridgeMain
+
     fun createTest(): Bridge.BridgeTest
+
     fun createGenerated(): Bridge.BridgeGenerated
 }
 
 sealed interface Bridge {
-
     interface BridgeMain : Bridge {
         fun saveAllDeclarations(allDeclarations: List<KSDeclaration>)
+
         fun saveInterFaceWithOutDeclaration(interfaceWithOutImpl: KSClassDeclaration)
     }
 
@@ -35,7 +37,7 @@ fun bridgeFactory(
     compileChecker: CompileChecker,
     codeResolver: CodeResolver,
     logger: KSPLogger,
-    path: String
+    path: String,
 ): BridgeFactory = BridgeFactoryImpl(storage, compileChecker, codeResolver, logger, path)
 
 internal class BridgeFactoryImpl(
@@ -43,9 +45,8 @@ internal class BridgeFactoryImpl(
     private val compileChecker: CompileChecker,
     private val codeResolver: CodeResolver,
     private val logger: KSPLogger,
-    private val path: String
+    private val path: String,
 ) : BridgeFactory {
-
     @get:JvmName("getApiKeyProperty")
     private val apiKey: String by lazy { getApiKey() }
 
@@ -64,10 +65,13 @@ internal class BridgeFactoryImpl(
     override fun createGenerated(): Bridge.BridgeGenerated =
         keyLogic(
             mock = BridgeGeneratedMock(),
-            work = BridgeGeneratedWork()
-            )
+            work = BridgeGeneratedWork(),
+        )
 
-    private fun <B : Bridge> keyLogic(mock: B, work: B): B {
+    private fun <B : Bridge> keyLogic(
+        mock: B,
+        work: B,
+    ): B {
         return when (apiKey) {
             "test" -> mock
             else -> work

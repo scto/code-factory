@@ -15,7 +15,7 @@ fun mainCodeWriter(storageWriter: StorageWriter): MainCodeWriter = MainCodeWrite
 
 class MainCodeWriterImpl(
     private val storageWriter: StorageWriter,
-): MainCodeWriter {
+) : MainCodeWriter {
     override fun write(writerData: WriterData) {
         val baseFile = File(storageWriter.getKotlinPath())
         val file = File(baseFile, pathOf(writerData.packageName, writerData.name))
@@ -29,7 +29,11 @@ class MainCodeWriterImpl(
         }
     }
 
-    private fun pathOf(packageName: String, fileName: String, extensionName: String = "kt"): String {
+    private fun pathOf(
+        packageName: String,
+        fileName: String,
+        extensionName: String = "kt",
+    ): String {
         val packageDirs = if (packageName != "") "${packageName.split(".").joinToString(separator)}$separator" else ""
         val extension = if (extensionName != "") ".$extensionName" else ""
         return "$packageDirs$fileName$extension"

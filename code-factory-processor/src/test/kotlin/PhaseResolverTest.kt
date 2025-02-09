@@ -19,19 +19,20 @@ class PhaseResolverTest : StringSpec({
     }
 
     "phase tests" {
-        val paths = listOf(
-            "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/main/kotlin/ForGenerate.kt",
-            "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/test/kotlin/ForGenerateTest.kt"
-        )
+        val paths =
+            listOf(
+                "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/main/kotlin/ForGenerate.kt",
+                "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/test/kotlin/ForGenerateTest.kt",
+            )
         phaseResolver.resolvePhase(paths) shouldBe Phases.Tests
     }
 
     "phase generated" {
-        val paths = listOf(
-            "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/main/kotlin/ForGenerate.kt",
-            "/Users/antonbutov/StudioProjects/code-factory/integration-test/generated/ksp/src/main/kotlin/ForGenerateKsp.kt"
-        )
+        val paths =
+            listOf(
+                "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/main/kotlin/ForGenerate.kt",
+                "/Users/antonbutov/StudioProjects/code-factory/integration-test/generated/ksp/src/main/kotlin/ForGenerateKsp.kt",
+            )
         phaseResolver.resolvePhase(paths) shouldBe Phases.Generated
     }
-
 })

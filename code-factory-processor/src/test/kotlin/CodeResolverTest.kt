@@ -5,15 +5,16 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.string.shouldContain
 
-class CodeResolverTest: StringSpec({
+class CodeResolverTest : StringSpec({
 
     "Code resolver should return same code in String" {
-        val sourceCode = """
+        val sourceCode =
+            """
             class MyClass {
             
             }
             
-        """.trimIndent()
+            """.trimIndent()
         val codeResolver = codeResolver()
         compilationForAssertations(sourceCode) { resolver ->
             val myClassDeclaration = resolver.getClassDeclarationByName(resolver.getClassDeclarationByName("MyClass")!!.qualifiedName!!)
