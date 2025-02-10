@@ -6,7 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import java.io.File
 
-class BasePathProviderTest: StringSpec ({
+class BasePathProviderTest : StringSpec({
 
     "should return base path" {
         val codeGenerator = mockk<CodeGenerator>(relaxed = true)
@@ -18,5 +18,4 @@ class BasePathProviderTest: StringSpec ({
 
         result shouldBe "some/path/"
     }
-
 })

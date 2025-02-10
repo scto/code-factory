@@ -19,14 +19,15 @@ class WriterTest : StringSpec({
         val codeGenerator = mockk<CodeGenerator>(relaxed = true)
 
         val writer = writer(storageWriter, mainCodeWriter, codeGenerator)
-        val writeData = WriterData(
-            code = "Some code",
-            packageName = "SomePackage",
-            name = "name"
-        )
+        val writeData =
+            WriterData(
+                code = "Some code",
+                packageName = "SomePackage",
+                name = "name",
+            )
 
         writer.write(
-            writerData = writeData
+            writerData = writeData,
         )
 
         verify {
@@ -36,5 +37,4 @@ class WriterTest : StringSpec({
             codeGenerator.createNewFile(any(), any(), any())
         }
     }
-
 })

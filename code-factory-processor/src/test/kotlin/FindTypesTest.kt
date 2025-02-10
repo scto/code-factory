@@ -1,5 +1,4 @@
 import com.code.factory.AllDeclarationFinder
-import com.code.factory.AllDeclarationFinderImpl
 import com.code.factory.allDeclarationFinder
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.coderesolver.codeResolver
@@ -20,18 +19,20 @@ class FindTypesTest : StringSpec({
     }
 
     "when contain A-type should find it" {
-        val typeASource = """
-           class A {
-           }
-       """.trimIndent()
+        val typeASource =
+            """
+            class A {
+            }
+            """.trimIndent()
 
-        val mainCode = """
+        val mainCode =
+            """
             
             fun someFun() {
                 val classA: A = A()
             }
             
-        """.trimIndent()
+            """.trimIndent()
 
         compilationForAssertations(typeASource, mainCode) { resolver ->
             assertEquals(listOf("A"), allDeclarationFinder.getAllDeclaration(resolver).map { it.toString() })
@@ -39,7 +40,8 @@ class FindTypesTest : StringSpec({
     }
 
     "when work with simple test should return test class" {
-        val testClass = """
+        val testClass =
+            """
             import java.io.File
             import kotlin.test.Test
             import kotlin.test.assertEquals
@@ -56,7 +58,7 @@ class FindTypesTest : StringSpec({
                     ""${'"'}.trimIndent(), generatedFile.readText())
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
         compilationForAssertations(testClass) { resolver ->
             val allDeclarations = allDeclarationFinder.getAllDeclaration(resolver)
             val code = codeResolver.getCodeString(allDeclarations)
@@ -65,11 +67,12 @@ class FindTypesTest : StringSpec({
     }
 
     "interface in single file should bee founded" {
-        val singleInterface = """
+        val singleInterface =
+            """
             interface SingleInterface {
                 fun myFun()
             }
-        """.trimIndent()
+            """.trimIndent()
         compilationForAssertations(singleInterface) { resolver ->
             val allDeclarations = allDeclarationFinder.getAllDeclaration(resolver)
             listOf("SingleInterface") shouldBe allDeclarations.map { it.toString() }

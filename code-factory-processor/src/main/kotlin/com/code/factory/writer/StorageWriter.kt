@@ -6,35 +6,34 @@ import java.nio.file.Files
 import kotlin.io.path.Path
 
 interface StorageWriter {
-
     fun setKotlinPath(path: String)
+
     fun getKotlinPath(): String
+
     fun clean()
 }
 
 fun storageWriter(): StorageWriter = StorageWriterImpl()
 
-
 private val kotlinPathDir = File("build/tmp/kotlinPath")
 private val kotlinPathFile = File(kotlinPathDir, "KotlinPath.txt")
 
-    class StorageWriterImpl: StorageWriter {
-        override fun setKotlinPath(path: String) {
-            if (kotlinPathDir.exists().not()) {
-                kotlinPathDir.mkdirs()
-            }
-
-            FileOutputStream(kotlinPathFile).use {
-                it.appendText(path)
-            }
+class StorageWriterImpl : StorageWriter {
+    override fun setKotlinPath(path: String) {
+        if (kotlinPathDir.exists().not()) {
+            kotlinPathDir.mkdirs()
         }
 
-        override fun getKotlinPath(): String {
-            return Files.readString(Path(kotlinPathFile.path))
+        FileOutputStream(kotlinPathFile).use {
+            it.appendText(path)
         }
-
-        override fun clean() {
-            kotlinPathDir.delete()
-        }
-
     }
+
+    override fun getKotlinPath(): String {
+        return Files.readString(Path(kotlinPathFile.path))
+    }
+
+    override fun clean() {
+        kotlinPathDir.delete()
+    }
+}

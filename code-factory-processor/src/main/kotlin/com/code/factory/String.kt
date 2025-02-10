@@ -1,4 +1,5 @@
 
+
 fun String.removeChatComment(): String {
     val startTag = "```kotlin"
     val endTag = "```"

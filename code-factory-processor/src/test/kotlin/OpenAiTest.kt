@@ -12,12 +12,14 @@ import kotlinx.coroutines.test.runTest
 class OpenAiTest : StringSpec({
     runTest {
         "when get code invoked the call should to delegate to OpenAi" {
-            val chatCompletion = mockk<ChatCompletion>().apply {
-                every { choices } returns kotlin.collections.listOf(mockk(relaxed = true))
-            }
-            val openAi = mockk<OpenAI>().apply {
-                coEvery { chatCompletion(any()) } returns chatCompletion
-            }
+            val chatCompletion =
+                mockk<ChatCompletion>().apply {
+                    every { choices } returns kotlin.collections.listOf(mockk(relaxed = true))
+                }
+            val openAi =
+                mockk<OpenAI>().apply {
+                    coEvery { chatCompletion(any()) } returns chatCompletion
+                }
             val logger = mockk<KSPLogger>(relaxed = true)
             val openAiService = OpenAiServiceImpl(openAi, logger)
             openAiService.getCode("context", "interface")
@@ -25,4 +27,3 @@ class OpenAiTest : StringSpec({
         }
     }
 })
-

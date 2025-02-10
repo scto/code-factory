@@ -1,3 +1,6 @@
 interface ForGenerate {
-    fun plus(first: Int, second: Int): Int
+    fun plus(
+        first: Int,
+        second: Int,
+    ): Int
 }

@@ -3,7 +3,7 @@ import com.code.factory.writer.storageWriter
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class StorageWriterTest: StringSpec ({
+class StorageWriterTest : StringSpec({
 
     lateinit var storageWriter: StorageWriter
 
@@ -29,5 +29,4 @@ class StorageWriterTest: StringSpec ({
 
         readPathNewInstance shouldBe "KotlinPath"
     }
-
 })

@@ -4,7 +4,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 
-class CheckCompilerTest : StringSpec({
+class CompileCheckerTest : StringSpec({
 
     lateinit var checker: CompileChecker
 
@@ -13,45 +13,50 @@ class CheckCompilerTest : StringSpec({
     }
 
     "for generation should compile" {
-        val contextClass = """
-            class Context {
+        val contextClass =
+            """
+                class Context {
 
-            }
- 
-        interface ForGenerate
-        """.trimIndent()
+                }
+            
+            interface ForGenerate
+            """.trimIndent()
 
-        val generated = """
+        val generated =
+            """
             class GeneratedCode(): ForGenerate {
 
             }
-        """.trimIndent()
+            """.trimIndent()
 
         checker.checkCompile(contextClass, generated) shouldBe true
     }
 
     "when context define interface and gen code it implement all code should compile" {
-        val contextInterface = """
+        val contextInterface =
+            """
             interface MyInterface {
                 fun myFun()
             }
-        """.trimIndent()
+            """.trimIndent()
 
-        val generatedClass = """
+        val generatedClass =
+            """
             class NewClass: MyInterface {
                 override fun myFun() {
                     // I work
                 }
             }
-        """.trimIndent()
+            """.trimIndent()
         checker.checkCompile(contextInterface, generatedClass) shouldBe true
     }
 
     "error compile test" {
-        val testClass = """
-           I am a error
-        
-        """.trimIndent()
+        val testClass =
+            """
+            I am a error
+            
+            """.trimIndent()
 
         checker.checkCompile("", testClass) shouldBe false
     }

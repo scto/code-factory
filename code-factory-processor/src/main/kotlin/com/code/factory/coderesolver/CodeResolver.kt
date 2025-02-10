@@ -6,5 +6,4 @@ interface CodeResolver {
     fun getCodeString(declaration: List<KSDeclaration>): List<String>
 }
 
-fun codeResolver(): CodeResolver =
-    CodeResolverImpl()
+fun codeResolver(): CodeResolver = CodeResolverImpl()

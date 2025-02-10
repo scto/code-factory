@@ -1,12 +1,9 @@
-import com.code.factory.bridge.Bridge
 import com.code.factory.compilation.compilationForAssertations
 import com.code.factory.interfaceFinder
-import io.mockk.mockk
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class FindInterfacesTest {
-
     @Test
     fun `simple file should compile`() {
         val source = """
@@ -44,13 +41,14 @@ class FindInterfacesTest {
     fun `should find two interfaces`() {
         compilationForAssertations(testSource) { resolver ->
             val interfaceFinder = interfaceFinder()
-            val interfaceNames = interfaceFinder.getInterfacesWithOutImplementation(resolver).map {
-                it.qualifiedName!!.getShortName()
-            }.toList()
+            val interfaceNames =
+                interfaceFinder.getInterfacesWithOutImplementation(resolver).map {
+                    it.qualifiedName!!.getShortName()
+                }.toList()
             assertEquals(listOf("InterfaceWithOutImplementation"), interfaceNames)
             assertEquals(
                 "somePackage",
-                interfaceFinder.getInterfacesWithOutImplementation(resolver).first().packageName.getShortName()
+                interfaceFinder.getInterfacesWithOutImplementation(resolver).first().packageName.getShortName(),
             )
         }
     }

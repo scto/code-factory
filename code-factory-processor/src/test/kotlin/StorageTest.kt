@@ -3,7 +3,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 
-class StorageTest: StringSpec ({
+class StorageTest : StringSpec({
 
     lateinit var storage: Storage
 
@@ -64,11 +64,12 @@ class StorageTest: StringSpec ({
         interfaceWithOutImplementation shouldBe null
     }
 
-    val interfaceWithOutImplementation = WriterData(
-        code = "Some code interfaceWithOutImplementation.",
-        packageName = "packageName",
-        name = "name"
-    )
+    val interfaceWithOutImplementation =
+        WriterData(
+            code = "Some code interfaceWithOutImplementation.",
+            packageName = "packageName",
+            name = "name",
+        )
 
     "save then read interfaceWithOutImplementation should return some immediate" {
         storage.setInterfaceWithOutImplementation(interfaceWithOutImplementation)
