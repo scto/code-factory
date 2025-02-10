@@ -16,43 +16,43 @@ class StorageTest : StringSpec({
     }
 
     "read default all declarations" {
-        val defaultAllDeclarations = storage.getAllDeclaration()
+        val defaultAllDeclarations = storage.getDeclarationCode()
 
         defaultAllDeclarations shouldBe null
     }
 
     "read allDeclaration test immediately" {
         val allDeclarations = "Some code."
-        storage.addDeclarations(allDeclarations)
+        storage.saveDeclarationsCode(allDeclarations)
 
-        val allDeclarationsRead = storage.getAllDeclaration()
+        val allDeclarationsRead = storage.getDeclarationCode()
         allDeclarationsRead shouldBe allDeclarations
     }
 
     "read test other phase" {
         storage.clean()
         val allDeclarations = "Some code other phase."
-        storage.addDeclarations(allDeclarations)
+        storage.saveDeclarationsCode(allDeclarations)
 
         val newStorage = StorageImp()
-        val allDeclarationsRead = newStorage.getAllDeclaration()
+        val allDeclarationsRead = newStorage.getDeclarationCode()
         allDeclarationsRead shouldContain allDeclarations
     }
 
     "when add first then add second should contaminate" {
         val firstDeclaration = "Some code first."
-        storage.addDeclarations(firstDeclaration)
+        storage.saveDeclarationsCode(firstDeclaration)
 
         val secondDeclaration = "Some code second."
-        storage.addDeclarations(secondDeclaration)
+        storage.saveDeclarationsCode(secondDeclaration)
 
-        val allDeclarationsRead = storage.getAllDeclaration()
+        val allDeclarationsRead = storage.getDeclarationCode()
         allDeclarationsRead shouldContain firstDeclaration
         allDeclarationsRead shouldContain secondDeclaration
     }
 
     "when clean should return null" {
-        val allDeclarationsRead = storage.getAllDeclaration()
+        val allDeclarationsRead = storage.getDeclarationCode()
         allDeclarationsRead shouldBe null
         val interfaceWithOutImplementation = storage.getInterfaceWithOutImplementation()
         interfaceWithOutImplementation shouldBe null
@@ -82,5 +82,19 @@ class StorageTest : StringSpec({
 
         val interfaceWithOutImplementationRead = StorageImp().getInterfaceWithOutImplementation()
         interfaceWithOutImplementationRead shouldBe interfaceWithOutImplementation
+    }
+
+    val declarationNames = listOf("FirstName", "SecondName")
+
+    "save then save again then read interfaceWithOutImplementation should return last" {
+        storage.saveDeclarationsNames(declarationNames)
+        val declarationNamesRead = storage.getNamesForTestFilter()
+        declarationNamesRead shouldBe declarationNames
+    }
+
+    "save then save again then read interfaceWithOutImplementation should return last after restart" {
+        storage.saveDeclarationsNames(declarationNames)
+        val declarationNamesRead = StorageImp().getNamesForTestFilter()
+        declarationNamesRead shouldBe declarationNames
     }
 })

@@ -19,7 +19,7 @@ class CodeResolverTest : StringSpec({
         compilationForAssertations(sourceCode) { resolver ->
             val myClassDeclaration = resolver.getClassDeclarationByName(resolver.getClassDeclarationByName("MyClass")!!.qualifiedName!!)
             "MyClass" shouldBeEqual myClassDeclaration!!.qualifiedName!!.getShortName()
-            val resolvedCode = codeResolver.getCodeString(listOf(myClassDeclaration))
+            val resolvedCode = codeResolver.getCodeString(sequenceOf(myClassDeclaration))
             sourceCode shouldContain resolvedCode.first()
         }
     }

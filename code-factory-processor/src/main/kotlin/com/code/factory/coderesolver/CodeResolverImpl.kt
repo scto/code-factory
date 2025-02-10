@@ -1,24 +1,25 @@
 package com.code.factory.coderesolver
 
 import com.google.devtools.ksp.symbol.KSDeclaration
+import com.google.devtools.ksp.symbol.KSFile
 import java.nio.file.Files
 import kotlin.io.path.Path
-import kotlin.runCatching
 
 internal class CodeResolverImpl : CodeResolver {
     @Throws(AssertionError::class)
-    override fun getCodeString(declaration: List<KSDeclaration>): List<String> {
-        assert(declaration.isNotEmpty())
+    override fun getCodeString(declaration: Sequence<KSDeclaration>): Sequence<String> {
+        assert(declaration.toList().isNotEmpty())
         return declaration.map {
-            it.containingFile?.filePath?.let {
-                fileCode(it)
-            } ?: "" // todo #46
+            it.containingFile?.let { getCodeString(it) } ?: "" // todo #46
         }
     }
 
-    private fun fileCode(fileName: String): String =
-        runCatching {
-            val path = Path(fileName)
-            Files.readString(path)
-        }.getOrNull() ?: error("Code not found.")
+    override fun getCodeString(file: KSFile): String {
+        return fileCode(file.filePath)
+    }
+
+    private fun fileCode(fileName: String): String {
+        val path = Path(fileName)
+        return Files.readString(path)
+    }
 }

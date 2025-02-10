@@ -6,9 +6,13 @@ import java.nio.file.Files
 import kotlin.io.path.Path
 
 interface Storage {
-    fun getAllDeclaration(): String?
+    fun getDeclarationCode(): String?
 
-    fun addDeclarations(declarationsCode: String)
+    fun getNamesForTestFilter(): List<String>
+
+    fun saveDeclarationsCode(declarationsCode: String)
+
+    fun saveDeclarationsNames(names: List<String>)
 
     fun getInterfaceWithOutImplementation(): WriterData?
 
@@ -19,42 +23,49 @@ interface Storage {
 
 fun storage(): Storage = StorageImp()
 
-private val allDeclarationsDir = File("build/tmp/code-factory")
-private val allDeclarationsFile = File(allDeclarationsDir, "AllDeclarations.txt")
-
-private val interfaceWithOutDeclarationDir = File("build/tmp/code-factory")
-private val interfaceWithOutDeclarationFile = File(interfaceWithOutDeclarationDir, "InterfaceWithOutImplementation.txt")
+private val TmpDir = File("build/tmp/code-factory")
+private val allDeclarationsFile = File(TmpDir, "DeclarationsCode.txt")
+private val declarationsNamesFile = File(TmpDir, "DeclarationsNames.txt")
+private val interfaceWithOutDeclarationFile = File(TmpDir, "InterfaceWithOutImplementation.txt")
 
 internal class StorageImp() : Storage {
-    private var allDeclarations: String? = readAllDeclarations()
+    private var allDeclarations: String? = readDeclarationsCode()
     private var interfaceWithOutImplementation: WriterData? = readInterfaceWithOutImplementation()
+
+    init {
+        if (!TmpDir.exists) {
+            TmpDir.mkdirs()
+        }
+    }
 
     override fun getInterfaceWithOutImplementation(): WriterData? {
         return interfaceWithOutImplementation
     }
 
-    override fun getAllDeclaration(): String? {
+    override fun getDeclarationCode(): String? {
         return allDeclarations
     }
 
-    override fun addDeclarations(declarationsCode: String) {
+    override fun getNamesForTestFilter(): List<String> {
+        return readDeclarationsNames()
+    }
+
+    override fun saveDeclarationsCode(declarationsCode: String) {
         allDeclarations = allDeclarations?.let {
             "$allDeclarations \n$declarationsCode"
         } ?: declarationsCode
-        saveAllDeclarations(declarationsCode)
+        saveAllDeclarationsCode(declarationsCode)
     }
 
-    private fun saveAllDeclarations(allDeclarations: String) {
-        if (!allDeclarationsDir.exists) {
-            allDeclarationsDir.mkdirs()
-        }
+    override fun saveDeclarationsNames(names: List<String>) {
+        declarationsNamesFile.writeText(Json.encodeToString(names))
+    }
+
+    private fun saveAllDeclarationsCode(allDeclarations: String) {
         allDeclarationsFile.writeText(allDeclarations)
     }
 
     private fun saveInterfaceWithOutImplementation(writerData: WriterData) {
-        if (!interfaceWithOutDeclarationDir.exists) {
-            interfaceWithOutDeclarationDir.mkdirs()
-        }
         interfaceWithOutDeclarationFile.writeText(Json.encodeToString(writerData))
     }
 
@@ -63,10 +74,12 @@ internal class StorageImp() : Storage {
             Json.decodeFromString<WriterData>(Files.readString(Path(interfaceWithOutDeclarationFile.path)))
         }.getOrNull()
 
-    private fun readAllDeclarations(): String? =
+    private fun readDeclarationsCode(): String? =
         runCatching {
             Files.readString(Path(allDeclarationsFile.path))
         }.getOrNull()
+
+    private fun readDeclarationsNames(): List<String> = Json.decodeFromString(Files.readString(Path(declarationsNamesFile.path)))
 
     override fun setInterfaceWithOutImplementation(writerData: WriterData) {
         interfaceWithOutImplementation = writerData
@@ -81,6 +94,9 @@ internal class StorageImp() : Storage {
         }
         runCatching {
             interfaceWithOutDeclarationFile.delete()
+        }
+        runCatching {
+            declarationsNamesFile.delete()
         }
     }
 }

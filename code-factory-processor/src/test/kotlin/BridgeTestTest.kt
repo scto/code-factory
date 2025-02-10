@@ -47,7 +47,7 @@ class BridgeTestTest : StringSpec({
 
     "when InterfaceFinder find interfaces bridge should to request code resolver for resolve it" {
         every {
-            storage.getAllDeclaration()
+            storage.getDeclarationCode()
         } returns "We are declarations."
         every {
             storage.getInterfaceWithOutImplementation()
@@ -58,7 +58,7 @@ class BridgeTestTest : StringSpec({
 
     "when allDeclarations is empty code should generate" {
         every {
-            storage.getAllDeclaration()
+            storage.getDeclarationCode()
         } returns null
         every {
             storage.getInterfaceWithOutImplementation()
@@ -69,7 +69,7 @@ class BridgeTestTest : StringSpec({
 
     "when interfaceWithOutImplementation is null get code should return null" {
         every {
-            storage.getAllDeclaration()
+            storage.getDeclarationCode()
         } returns "We are declarations."
         every {
             storage.getInterfaceWithOutImplementation()
