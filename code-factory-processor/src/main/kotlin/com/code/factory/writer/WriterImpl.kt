@@ -17,7 +17,7 @@ internal class WriterImpl(
     ) {
         codeGenerator.createNewFile(Dependencies.ALL_FILES, packageName, name)
         val emptyFile = codeGenerator.generatedFile.first()
-        val kotlinPath = emptyFile.parentFile.path
+        val kotlinPath = emptyFile.parentFile.path // #77
         storageWriter.setKotlinPath(kotlinPath)
     }
 

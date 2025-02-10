@@ -66,9 +66,10 @@ internal class BridgeTestMock(
                     return first + second
                     }
                 }
+                
                 """.trimIndent(),
             packageName = writeData.packageName,
-            name = writeData.name,
+            name = "GeneratedCode",
         )
     }
 }
