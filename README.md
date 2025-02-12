@@ -58,7 +58,14 @@ class GeneratedCode(): ForGenerate {
 }
 ```
 
+## Technologies Used  
+Code Factory is built with the following technologies:  
+- **Test-Driven Development (TDD)** using [Kotest](https://kotest.io/) – `io.kotest:kotest`
+- **AI Integration** with [OpenAI API](https://github.com/aallam/openai-kotlin) – `com.aallam.openai:openai`
+- **Code Quality** enforced with [ktlint](https://github.com/pinterest/ktlint)  
+
 ## Contributions Welcome! 
+We follow best practices to ensure a robust and maintainable codebase. Contributions are welcome! 🚀 
 We're looking for skilled contributors, especially those with expertise in AI and Kotlin. Join us in enhancing Code Factory's capabilities!
 
 # License
