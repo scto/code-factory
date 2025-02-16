@@ -7,12 +7,9 @@ repositories {
     google()
 }
 
-version = "1.0-SNAPSHOT"
-
 dependencies {
     implementation(kotlin("stdlib"))
     "ksp"(project(":code-factory-processor"))
-    //   kspTest(project(":ksp-processor"))
 
     testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)

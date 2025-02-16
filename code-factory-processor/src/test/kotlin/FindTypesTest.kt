@@ -1,20 +1,15 @@
 import com.code.factory.AllDeclarationFinder
 import com.code.factory.allDeclarationFinder
-import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.coderesolver.codeResolver
 import com.code.factory.compilation.compilationForAssertations
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import kotlin.test.assertEquals
 
-private lateinit var codeResolver: CodeResolver
 private lateinit var allDeclarationFinder: AllDeclarationFinder
 
 class FindTypesTest : StringSpec({
 
     beforeTest {
-        codeResolver = codeResolver()
         allDeclarationFinder = allDeclarationFinder()
     }
 
@@ -35,7 +30,7 @@ class FindTypesTest : StringSpec({
             """.trimIndent()
 
         compilationForAssertations(typeASource, mainCode) { resolver ->
-            assertEquals(listOf("A"), allDeclarationFinder.getAllDeclaration(resolver).map { it.toString() })
+            assertEquals(listOf("A"), allDeclarationFinder.getAllDeclaration(resolver).map { it.toString() }.toList())
         }
     }
 
@@ -60,9 +55,8 @@ class FindTypesTest : StringSpec({
             }
             """.trimIndent()
         compilationForAssertations(testClass) { resolver ->
-            val allDeclarations = allDeclarationFinder.getAllDeclaration(resolver)
-            val code = codeResolver.getCodeString(allDeclarations)
-            code shouldContain testClass
+            val declarations = allDeclarationFinder.getAllDeclaration(resolver).map { it.qualifiedName?.asString() }.toList()
+            declarations shouldBe listOf("GeneratedTest")
         }
     }
 
@@ -75,7 +69,7 @@ class FindTypesTest : StringSpec({
             """.trimIndent()
         compilationForAssertations(singleInterface) { resolver ->
             val allDeclarations = allDeclarationFinder.getAllDeclaration(resolver)
-            listOf("SingleInterface") shouldBe allDeclarations.map { it.toString() }
+            listOf("SingleInterface") shouldBe allDeclarations.map { it.toString() }.toList()
         }
     }
 })

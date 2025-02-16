@@ -1,8 +1,9 @@
 package com.code.factory.ksp
 
-import com.code.factory.AllDeclarationFinder
+import com.code.factory.CodeFilter
 import com.code.factory.CompileChecker
 import com.code.factory.InterfaceFinder
+import com.code.factory.TestCodeFilter
 import com.code.factory.bridge.BridgeFactory
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.writer.Writer
@@ -15,7 +16,8 @@ import kotlinx.coroutines.runBlocking
 class KspProcessor(
     private val logger: KSPLogger,
     private val writer: Writer,
-    private val allDeclarationFinder: AllDeclarationFinder,
+    private val codeFilter: CodeFilter,
+    private val testCodeFilter: TestCodeFilter,
     private val interfaceFinder: InterfaceFinder,
     private val codeResolver: CodeResolver,
     private val compileChecker: CompileChecker,
@@ -27,13 +29,13 @@ class KspProcessor(
             when (phaseResolver.resolvePhase(resolver.getAllFiles().map { it.filePath }.toList())) {
                 Phases.Main -> {
                     // logger.warn("Main")
-                    val allDeclarations = allDeclarationFinder.getAllDeclaration(resolver)
-                    val bridgeMain = bridgeFactory.createMain()
-                    bridgeMain.saveAllDeclarations(allDeclarations)
+                    val bridgeMain = bridgeFactory.createMain() // need here for test
                     val interfaceWithOutImpl =
                         interfaceFinder
                             .getInterfacesWithOutImplementation(resolver)
                             .firstOrNull() ?: return@runBlocking // todo # 47 only one yet
+                    val declarations = codeFilter.getFilteredDeclarations(resolver, sequenceOf(interfaceWithOutImpl))
+                    bridgeMain.saveDeclarations(declarations)
                     bridgeMain.saveInterFaceWithOutDeclaration(interfaceWithOutImpl)
                     writer.setKotlinPath(
                         interfaceWithOutImpl.packageName.asString(),
@@ -44,8 +46,8 @@ class KspProcessor(
                 Phases.Tests -> {
                     // logger.warn("Test")
                     val bridgeTest = bridgeFactory.createTest()
-                    val allDeclarationTest = allDeclarationFinder.getAllDeclaration(resolver)
-                    val generatedCode = bridgeTest.getCode(allDeclarationTest)
+                    val declarationTest = testCodeFilter.getFilteredTestDeclarations(resolver)
+                    val generatedCode = bridgeTest.getCode(declarationTest)
                     generatedCode?.let {
                         writer.write(it)
                     } ?: logger.warn("Code not valid")

@@ -20,13 +20,13 @@ interface BridgeFactory {
 
 sealed interface Bridge {
     interface BridgeMain : Bridge {
-        fun saveAllDeclarations(allDeclarations: List<KSDeclaration>)
+        fun saveDeclarations(allDeclarations: Sequence<KSDeclaration>)
 
         fun saveInterFaceWithOutDeclaration(interfaceWithOutImpl: KSClassDeclaration)
     }
 
     interface BridgeTest : Bridge {
-        suspend fun getCode(testDeclarations: List<KSDeclaration>): WriterData?
+        suspend fun getCode(testDeclarations: Sequence<KSDeclaration>): WriterData?
     }
 
     interface BridgeGenerated : Bridge
@@ -58,7 +58,7 @@ internal class BridgeFactoryImpl(
 
     override fun createTest(): Bridge.BridgeTest =
         keyLogic(
-            mock = BridgeTestMock(storage),
+            mock = BridgeTestWork(codeResolver, storage, openAiServiceMock(logger), compileChecker),
             work = BridgeTestWork(codeResolver, storage, openAiService(apiKey, logger), compileChecker),
         )
 
