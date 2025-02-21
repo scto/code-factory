@@ -6,9 +6,9 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 
 interface CodeFilter {
-    fun getFilteredDeclarations(
+    fun getFilteredCodeDeclarations(
         resolver: Resolver,
-        interfaceWithOutDeclaration: Sequence<KSClassDeclaration>,
+        interfaceWithOutDeclaration: KSClassDeclaration,
     ): Sequence<KSDeclaration>
 }
 
@@ -21,14 +21,14 @@ internal class CodeFilterImpl(
     private val getAllDeclarationFinder: AllDeclarationFinder,
     private val codeResolver: CodeResolver,
 ) : CodeFilter {
-    override fun getFilteredDeclarations(
+    override fun getFilteredCodeDeclarations(
         resolver: Resolver,
-        interfaceWithOutDeclaration: Sequence<KSClassDeclaration>,
+        interfaceWithOutDeclaration: KSClassDeclaration,
     ): Sequence<KSDeclaration> {
-        val codeInterfaceWithOutDeclaration = codeResolver.getCodeString(interfaceWithOutDeclaration).joinToString("\n") // #81
+        val codeInterfaceWithOutDeclarationCode = codeResolver.getCodeString(interfaceWithOutDeclaration)
         return getAllDeclarationFinder.getAllDeclaration(resolver)
             .filter {
-                it.qualifiedName!!.asString() in codeInterfaceWithOutDeclaration
+                it.qualifiedName!!.asString() in codeInterfaceWithOutDeclarationCode
             }
     }
 }

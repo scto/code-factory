@@ -92,6 +92,7 @@ internal class OpenAiServiceImpl(
         context: String,
         interfaceForCode: String,
     ): String {
+        val logString = StringBuilder()
         val chatCompletionRequest =
             ChatCompletionRequest(
                 model = ModelId(MODEL),
@@ -107,25 +108,25 @@ internal class OpenAiServiceImpl(
                         ),
                         ChatMessage(
                             role = ChatRole.User,
-                            content = "$USER_ASK_FIRST $interfaceForCode $USER_ASK_SECOND",
+                            content =
+                                "$USER_ASK_FIRST $interfaceForCode $USER_ASK_SECOND"
+                                    .also {
+                                        logString.append("Request: ---->")
+                                        logString.append("\n")
+                                        logString.append(it)
+                                        logString.append("\n")
+                                        logString.append(context)
+                                        logString.append("\n")
+                                    },
                         ),
                     ),
-            ).also {
-                logger.warn(
-                    "Request: ----> \n" +
-                        "${
-                            it.messages.map {
-                                it.content + "\n"
-                            }
-                        }",
-                )
-            }
-        val code = openAi.chatCompletion(chatCompletionRequest).choices.first().message.content ?: ""
-        return code.also {
-            logger.warn(
-                "response: <----\n" +
-                    "$code\n",
             )
+        val code = openAi.chatCompletion(chatCompletionRequest).choices.first().message.content ?: ""
+        logString.append("Response: <----")
+        logString.append("\n")
+        logString.append(code)
+        return code.also {
+            logger.warn(logString.toString())
         }
     }
 }

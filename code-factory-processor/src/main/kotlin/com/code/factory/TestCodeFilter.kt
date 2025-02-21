@@ -1,30 +1,34 @@
 package com.code.factory
 
-import Storage
 import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.coderesolver.codeResolver
-import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.symbol.KSDeclaration
 
 interface TestCodeFilter {
-    fun getFilteredTestDeclarations(resolver: Resolver): Sequence<KSDeclaration>
+    fun getFilteredTestCode(
+        declarations: Sequence<String>,
+        basePath: String,
+    ): Sequence<String>
 }
 
 fun testCodeFilter(
-    storage: Storage,
+    testFilesResolver: TestFilesResolver,
     codeResolver: CodeResolver,
-): TestCodeFilter = TestCodeFilterImpl(storage, codeResolver)
+): TestCodeFilter = TestCodeFilterImpl(testFilesResolver, codeResolver)
 
 class TestCodeFilterImpl(
-    private val storage: Storage,
+    private val testFilesResolver: TestFilesResolver,
     private val codeResolver: CodeResolver,
 ) : TestCodeFilter {
-    override fun getFilteredTestDeclarations(resolver: Resolver): Sequence<KSDeclaration> {
-        val declarationsNames = storage.getNamesForTestFilter()
-        return resolver.getAllFiles()
-            .filter {
-                val codeOfTest = codeResolver.getCodeString(it)
-                declarationsNames.any { it in codeOfTest }
-            }.getAllDeclarations()
+    override fun getFilteredTestCode(
+        declarationNames: Sequence<String>,
+        basePath: String,
+    ): Sequence<String> {
+        val testFiles = testFilesResolver.getTestFiles(basePath)
+        return testFiles
+            .map {
+                codeResolver.getCode(it.path)
+            }
+            .filter { codeOfTest ->
+                declarationNames.any { it in codeOfTest }
+            }
     }
 }

@@ -44,8 +44,12 @@ class CodeFilterTest : StringSpec({
             }
             """.trimIndent()
         compilationForAssertations(simpleClass, interfaceWithOutDeclarations, secretClass) { resolver ->
-            val interfaceWithOutDeclarations = interfaceFinder.getInterfacesWithOutImplementation(resolver)
-            val result = codeFilter.getFilteredDeclarations(resolver, interfaceWithOutDeclarations).map { it.qualifiedName!!.asString() }
+            val interfaceWithOutDeclarations = interfaceFinder.getInterfacesWithOutImplementation(resolver).first()
+            val result =
+                codeFilter.getFilteredCodeDeclarations(
+                    resolver,
+                    interfaceWithOutDeclarations,
+                ).map { it.qualifiedName!!.asString() }
             result.toList() shouldBe listOf("SimpleClass", "InterfaceWithOutDeclarations")
         }
     }
