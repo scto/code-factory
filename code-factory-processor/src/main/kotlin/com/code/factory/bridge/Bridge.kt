@@ -1,9 +1,6 @@
 package com.code.factory.bridge
 
-import Storage
-import com.code.factory.CompileChecker
 import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.writer.WriterData
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
@@ -20,29 +17,25 @@ interface BridgeFactory {
 
 sealed interface Bridge {
     interface BridgeMain : Bridge {
-        fun saveDeclarations(allDeclarations: Sequence<KSDeclaration>)
-
-        fun saveInterFaceWithOutDeclaration(interfaceWithOutImpl: KSClassDeclaration)
+        suspend fun getCode(
+            testCode: Sequence<String>,
+            declarations: Sequence<KSDeclaration>,
+            interfaceWithOutImpl: KSClassDeclaration,
+        ): WriterData?
     }
 
-    interface BridgeTest : Bridge {
-        suspend fun getCode(testDeclarations: Sequence<KSDeclaration>): WriterData?
-    }
+    interface BridgeTest : Bridge
 
     interface BridgeGenerated : Bridge
 }
 
 fun bridgeFactory(
-    storage: Storage,
-    compileChecker: CompileChecker,
     codeResolver: CodeResolver,
     logger: KSPLogger,
     path: String,
-): BridgeFactory = BridgeFactoryImpl(storage, compileChecker, codeResolver, logger, path)
+): BridgeFactory = BridgeFactoryImpl(codeResolver, logger, path)
 
 internal class BridgeFactoryImpl(
-    private val storage: Storage,
-    private val compileChecker: CompileChecker,
     private val codeResolver: CodeResolver,
     private val logger: KSPLogger,
     private val path: String,
@@ -52,21 +45,13 @@ internal class BridgeFactoryImpl(
 
     override fun createMain(): Bridge.BridgeMain =
         keyLogic(
-            mock = BridgeMainWork(storage, codeResolver),
-            work = BridgeMainWork(storage, codeResolver),
+            mock = BridgeMainWork(codeResolver, openAiServiceMock(logger)),
+            work = BridgeMainWork(codeResolver, openAiService(apiKey, logger)),
         )
 
-    override fun createTest(): Bridge.BridgeTest =
-        keyLogic(
-            mock = BridgeTestWork(codeResolver, storage, openAiServiceMock(logger), compileChecker),
-            work = BridgeTestWork(codeResolver, storage, openAiService(apiKey, logger), compileChecker),
-        )
+    override fun createTest(): Bridge.BridgeTest = BridgeTestWork()
 
-    override fun createGenerated(): Bridge.BridgeGenerated =
-        keyLogic(
-            mock = BridgeGeneratedMock(),
-            work = BridgeGeneratedWork(),
-        )
+    override fun createGenerated(): Bridge.BridgeGenerated = BridgeGeneratedWork()
 
     private fun <B : Bridge> keyLogic(
         mock: B,

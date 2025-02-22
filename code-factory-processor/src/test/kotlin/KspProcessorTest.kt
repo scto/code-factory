@@ -3,11 +3,13 @@ import com.code.factory.CodeFilter
 import com.code.factory.CompileChecker
 import com.code.factory.InterfaceFinder
 import com.code.factory.TestCodeFilter
+import com.code.factory.TestSourcePathResolver
 import com.code.factory.bridge.BridgeFactory
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.ksp.KspProcessor
 import com.code.factory.ksp.PhaseResolver
 import com.code.factory.ksp.Phases
+import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSDeclaration
 import io.kotest.core.spec.style.StringSpec
@@ -29,6 +31,8 @@ class KspProcessorTest : StringSpec({
     lateinit var phaseResolver: PhaseResolver
     lateinit var codeFilter: CodeFilter
     lateinit var testCodeFilter: TestCodeFilter
+    lateinit var testSourcePathResolver: TestSourcePathResolver
+    lateinit var codeGenerator: CodeGenerator
 
     beforeTest {
         bridgeFactory = mockk(relaxed = true)
@@ -48,11 +52,11 @@ class KspProcessorTest : StringSpec({
         phaseResolver = mockk(relaxed = true)
         codeFilter = mockk(relaxed = true)
         testCodeFilter = mockk(relaxed = true)
-
+        testSourcePathResolver = mockk(relaxed = true)
+        codeGenerator = mockk(relaxed = true)
         kspProcessor =
             KspProcessor(
                 logger = mockk(relaxed = true),
-                writer = mockk(relaxed = true),
                 interfaceFinder = interfaceFinder,
                 codeResolver = codeResolver,
                 bridgeFactory = bridgeFactory,
@@ -60,6 +64,8 @@ class KspProcessorTest : StringSpec({
                 phaseResolver = phaseResolver,
                 codeFilter = codeFilter,
                 testCodeFilter = testCodeFilter,
+                testSourcePathResolver = testSourcePathResolver,
+                codeGenerator = codeGenerator,
             )
     }
 

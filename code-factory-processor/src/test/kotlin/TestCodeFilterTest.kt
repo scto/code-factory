@@ -1,22 +1,27 @@
 import com.code.factory.TestCodeFilter
+import com.code.factory.TestFilesResolver
 import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.compilation.compilationForAssertations
 import com.code.factory.testCodeFilter
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import java.io.File
 
 class TestCodeFilterTest : StringSpec({
 
-    lateinit var storage: Storage
     lateinit var codeResolver: CodeResolver
+    lateinit var testFilesResolver: TestFilesResolver
     lateinit var testCodeFilter: TestCodeFilter
 
     beforeTest {
-        storage = mockk(relaxed = true)
         codeResolver = mockk(relaxed = true)
-        testCodeFilter = testCodeFilter(storage, codeResolver)
+        testFilesResolver = mockk(relaxed = true)
+        val testFile = File("testPath")
+        every {
+            testFilesResolver.getTestFiles(any())
+        } returns sequenceOf(testFile)
+        testCodeFilter = testCodeFilter(testFilesResolver, codeResolver)
     }
 
     val testFile =
@@ -30,15 +35,13 @@ class TestCodeFilterTest : StringSpec({
         }
         """.trimIndent()
 
-    "when have empty declaration names should all return" {
-        val declarationsNames = listOf<String>()
+    "when have empty declaration names should return nothing" {
+        val declarationsNames = emptySequence<String>()
         every {
-            storage.getNamesForTestFilter()
-        } returns declarationsNames
-        compilationForAssertations(testFile) { resolver ->
-            val result = testCodeFilter.getFilteredTestDeclarations(resolver).toList()
-            result shouldBe emptyList()
-        }
+            codeResolver.getCodeString(file = any())
+        } returns testFile
+        val result = testCodeFilter.getFilteredTestCode(declarationsNames, "path").toList()
+        result shouldBe emptyList()
     }
 
     val secretTest =
@@ -51,17 +54,21 @@ class TestCodeFilterTest : StringSpec({
         }
         """.trimIndent()
 
-    "when have a declaration should return the test" {
-        val declarationsNames = listOf("SomeClass")
-        every {
-            storage.getNamesForTestFilter()
-        } returns declarationsNames
+    "when secret not contain in test code the test should not return" {
+        val declarationsNames = sequenceOf("SomeClass")
         every {
             codeResolver.getCodeString(file = any())
         } returns secretTest
-        compilationForAssertations(secretTest) { resolver ->
-            val result = testCodeFilter.getFilteredTestDeclarations(resolver).map { it.simpleName.asString() }.toList()
-            result shouldBe emptyList()
-        }
+        val result = testCodeFilter.getFilteredTestCode(declarationsNames, "path").toList()
+        result shouldBe emptyList()
+    }
+
+    "when names contains in test should return the test" {
+        val declarationsNames = sequenceOf("SomeClass")
+        every {
+            codeResolver.getCode(any())
+        } returns testFile // !
+        val result = testCodeFilter.getFilteredTestCode(declarationsNames, "path").toList().first()
+        result shouldBe testFile
     }
 })
