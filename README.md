@@ -71,6 +71,8 @@ Code Factory is built with the following technologies:
 We follow best practices to ensure a robust and maintainable codebase. Contributions are welcome! 🚀 
 We're looking for skilled contributors, especially those with expertise in AI and Kotlin. Join us in enhancing Code Factory's capabilities!
 
+## If you need OpenAI API code, write to me at butov6101@gmail.com. I can give it to you within 24 hours.
+
 # License
 ```xml
 Licensed under the Apache License, Version 2.0 (the "License");
