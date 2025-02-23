@@ -57,6 +57,8 @@ class GeneratedCode(): ForGenerate {
     }
 }
 ```
+## Samples
+[kotlin-code-factory-samples](https://github.com/AntonButov/kotlin-code-factory-samples.git)
 
 ## Technologies Used  
 Code Factory is built with the following technologies:  
