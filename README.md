@@ -49,7 +49,7 @@ class GeneratedTest {
     }
 }
 ```
-3. Build the module🚀. The plugin has to generate
+3. Build the module 🚀. The plugin has to generate
 ```
 class GeneratedCode(): ForGenerate {
     override fun plus(first: Int, second: Int): Int {
