@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    alias(libs.plugins.ktlint)
 }
 
 group = "com.code.factory"
@@ -22,6 +23,22 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+tasks.named("build") {
+    dependsOn("ktlintFormat")
+}
+
+tasks.named("test") {
+    dependsOn("ktlintFormat")
+}
+
+ktlint {
+    debug.set(false)
+    android.set(false)
+    ignoreFailures.set(true)
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+    }
 }
 kotlin {
     jvmToolchain(17)
