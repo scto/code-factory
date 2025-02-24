@@ -1,17 +1,32 @@
-stages:
-  - release
+name: Release
 
-release_job:
-  stage: release
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  script:
-    - export VERSION=$(sed -nE 's/^version = "([^"]+)"/\1/p' code-factory-processor/build.gradle.kts)
-    - echo "Extracted version: $VERSION"
+on:
+  push:
+    branches:
+      - trunk
 
-    - git tag "v$VERSION"
-    - git push origin "v$VERSION"
+jobs:
   release:
-    tag_name: "v$VERSION"
-    description: "Release version $VERSION"
-    ref: "$CI_COMMIT_SHA"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from build.gradle.kts
+        id: get_version
+        run: echo "VERSION=$(sed -nE 's/^version = \"([^\"]+)\"/\1/p' code-factory-processor/build.gradle.kts)" >> $GITHUB_ENV
+
+      - name: Create Git tag
+        run: |
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ env.VERSION }}"
+          name: "Release v${{ env.VERSION }}"
+          body: "Automated release for version v${{ env.VERSION }}"
+          draft: false
+          prerelease: false
