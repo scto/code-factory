@@ -1,0 +1,17 @@
+stages:
+  - release
+
+release_job:
+  stage: release
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - export VERSION=$(sed -nE 's/^version = "([^"]+)"/\1/p' code-factory-processor/build.gradle.kts)
+    - echo "Extracted version: $VERSION"
+
+    - git tag "v$VERSION"
+    - git push origin "v$VERSION"
+  release:
+    tag_name: "v$VERSION"
+    description: "Release version $VERSION"
+    ref: "$CI_COMMIT_SHA"
