@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    "ksp"(project(":code-factory-processor"))
+    ksp(project(":code-factory-processor"))
 
     testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)

@@ -7,6 +7,7 @@ plugins {
     id("maven-publish")
     alias(libs.plugins.vanniktech)
     `java-gradle-plugin`
+    alias(libs.plugins.ktlint)
 }
 
 group = "io.github.antonbutov"
@@ -36,6 +37,22 @@ dependencies {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+}
+tasks.named("build") {
+    dependsOn("ktlintFormat")
+}
+
+tasks.named("test") {
+    dependsOn("ktlintFormat")
+}
+
+ktlint {
+    debug.set(false)
+    android.set(false)
+    ignoreFailures.set(true)
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+    }
 }
 
 mavenPublishing {
