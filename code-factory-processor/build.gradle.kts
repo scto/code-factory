@@ -3,7 +3,6 @@ import com.vanniktech.maven.publish.SonatypeHost
 plugins {
     alias(libs.plugins.ksp)
     kotlin("jvm")
-    alias(libs.plugins.kotlin.seialization)
     id("maven-publish")
     alias(libs.plugins.vanniktech)
     `java-gradle-plugin`
@@ -26,7 +25,6 @@ dependencies {
     implementation(libs.autoservice.annotations)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.tschuchortdev.testing.ksp)
-    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
