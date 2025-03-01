@@ -26,10 +26,11 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.tschuchortdev.testing.ksp)
 
+    implementation(libs.mockk)
+
     testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotest.assertions)
-    testImplementation(libs.mockk)
     testImplementation(libs.kotest.runner.junit5.jvm)
 }
 
