@@ -57,6 +57,39 @@ class GeneratedCode(): ForGenerate {
     }
 }
 ```
+## You will see all requsts to OpenAI:
+```
+w: [ksp] Request: ---->
+You had to implement interface: ForGenerate Return only code implementation please.
+interface ForGenerate {
+    fun plus(
+        first: Int,
+        second: Int,
+    ): Int
+}
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class GeneratedTest {
+    @Test
+    fun generatedFileGets() {
+        val forGenerate: ForGenerate = GeneratedCode()
+        val expected = forGenerate.plus(2, 2)
+        assertEquals(4, expected)
+    }
+}
+
+Response: <----
+    Sure, the implementation of the interface `ForGenerate` can be done as follows:
+
+    ```kotlin
+class GeneratedCode(): ForGenerate {
+    override fun plus(first: Int, second: Int): Int {
+    return first + second
+    }
+}
+```
 ## Samples
 [kotlin-code-factory-samples](https://github.com/AntonButov/kotlin-code-factory-samples.git)
 
