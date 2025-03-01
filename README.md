@@ -57,7 +57,7 @@ class GeneratedCode(): ForGenerate {
     }
 }
 ```
-## You will see all requsts to OpenAI:
+## You will see all requests to OpenAI:
 ```
 w: [ksp] Request: ---->
 You had to implement interface: ForGenerate Return only code implementation please.
