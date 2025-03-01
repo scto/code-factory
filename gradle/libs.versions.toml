@@ -1,14 +1,14 @@
 [versions]
-kotlin = "1.9.25"
+kotlin = "1.9.24"
 kotlinx-coroutines = "1.9.0"
-ksp = "1.9.25-1.0.20"
+ksp = "1.9.24-1.0.20"
 autoservice-ksp = "1.2.0"
 autoservice = "1.1.1"
 tschuchortdev = "1.6.0"
 kotest = "5.9.1"
 mockk = "1.13.17"
 kotestRunnerJunit5Jvm = "5.9.1"
-openaiKotlinBom = "3.8.2"
+openaiKotlinBom = "4.0.1"
 vanniktech="0.30.0"
 ktlint = "12.2.0"
 

@@ -4,16 +4,17 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class CompilationForAssertationTest {
+    val correctCode =
+        """
+        class Test {
+            fun test(): String {
+                return "test"
+            }
+        }
+        """.trimIndent()
+
     @Test
     fun `correct code should compile`() {
-        val correctCode =
-            """
-            class Test {
-                fun test() {
-                    return "test"
-                }
-            }
-            """.trimIndent()
         compilationForAssertations(correctCode) {
             assertTrue { true }
         }
@@ -22,7 +23,7 @@ class CompilationForAssertationTest {
     @Test
     fun `incorrect code should not compile`() {
         assertThrows<IllegalStateException> {
-            compilationForAssertations("") {
+            compilationForAssertations(correctCode) {
                 error("My error.")
             }
         }
