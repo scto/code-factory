@@ -1,4 +1,4 @@
-import com.code.factory.coderesolver.codeResolver
+import com.code.factory.coderesolver.CodeResolverImpl
 import com.code.factory.compilation.compilationForAssertations
 import com.google.devtools.ksp.getClassDeclarationByName
 import io.kotest.core.spec.style.StringSpec
@@ -15,7 +15,7 @@ class CodeResolverTest : StringSpec({
             }
             
             """.trimIndent()
-        val codeResolver = codeResolver()
+        val codeResolver = CodeResolverImpl()
         compilationForAssertations(sourceCode) { resolver ->
             val myClassDeclaration = resolver.getClassDeclarationByName(resolver.getClassDeclarationByName("MyClass")!!.qualifiedName!!)
             "MyClass" shouldBeEqual myClassDeclaration!!.qualifiedName!!.getShortName()

@@ -11,7 +11,6 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.kotlin.kspApi)
     implementation(kotlin("stdlib"))
     implementation(libs.tschuchortdev.testing.ksp)
 

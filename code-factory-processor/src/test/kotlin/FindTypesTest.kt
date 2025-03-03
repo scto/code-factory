@@ -1,5 +1,5 @@
 import com.code.factory.AllDeclarationFinder
-import com.code.factory.allDeclarationFinder
+import com.code.factory.AllDeclarationFinderImpl
 import com.code.factory.compilation.compilationForAssertations
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -10,7 +10,7 @@ private lateinit var allDeclarationFinder: AllDeclarationFinder
 class FindTypesTest : StringSpec({
 
     beforeTest {
-        allDeclarationFinder = allDeclarationFinder()
+        allDeclarationFinder = AllDeclarationFinderImpl()
     }
 
     "when contain A-type should find it" {

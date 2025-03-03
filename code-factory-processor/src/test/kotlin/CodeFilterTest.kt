@@ -1,10 +1,10 @@
 import com.code.factory.AllDeclarationFinder
+import com.code.factory.AllDeclarationFinderImpl
 import com.code.factory.CodeFilter
+import com.code.factory.CodeFilterImpl
 import com.code.factory.InterfaceFinder
-import com.code.factory.allDeclarationFinder
-import com.code.factory.codeFilter
 import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.coderesolver.codeResolver
+import com.code.factory.coderesolver.CodeResolverImpl
 import com.code.factory.compilation.compilationForAssertations
 import com.code.factory.interfaceFinder
 import io.kotest.core.spec.style.StringSpec
@@ -18,9 +18,9 @@ class CodeFilterTest : StringSpec({
     lateinit var interfaceFinder: InterfaceFinder
 
     beforeTest {
-        getAllDeclarations = allDeclarationFinder()
-        codeResolver = codeResolver()
-        codeFilter = codeFilter(getAllDeclarations, codeResolver)
+        getAllDeclarations = AllDeclarationFinderImpl()
+        codeResolver = CodeResolverImpl()
+        codeFilter = CodeFilterImpl(getAllDeclarations, codeResolver)
         interfaceFinder = interfaceFinder()
     }
 

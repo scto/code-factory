@@ -14,64 +14,67 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
-class KspProcessor(
-    private val logger: KSPLogger,
-    private val codeFilter: CodeFilter,
-    private val testCodeFilter: TestCodeFilter,
-    private val interfaceFinder: InterfaceFinder,
-    private val codeResolver: CodeResolver,
-    private val compileChecker: CompileChecker,
-    private val phaseResolver: PhaseResolver,
-    private val bridgeFactory: BridgeFactory,
-    private val testSourcePathResolver: TestSourcePathResolver,
-    private val codeGenerator: CodeGenerator,
-) : SymbolProcessor {
-    override fun process(resolver: Resolver): List<KSAnnotated> {
-        runBlocking {
-            when (phaseResolver.resolvePhase(resolver.getAllFiles().map { it.filePath }.toList())) {
-                Phases.Main -> {
-                    // logger.warn("Main")
-                    val bridgeMain = bridgeFactory.createMain() // need here for test
-                    val interfaceWithOutImpl =
-                        interfaceFinder
-                            .getInterfacesWithOutImplementation(resolver)
-                            .firstOrNull() ?: return@runBlocking // todo # 47 only one yet
-                    val declarations = codeFilter.getFilteredCodeDeclarations(resolver, interfaceWithOutImpl)
-                    if (declarations.toList().isEmpty()) {
-                        logger.warn("No declarations found")
-                        return@runBlocking
-                    }
-                    val basePath = testSourcePathResolver.getSourcesPath(resolver)
-                    val codeOfTests =
-                        testCodeFilter.getFilteredTestCode(declarations.map { it.simpleName.asString() }, basePath)
-                    if (codeOfTests.toList().isEmpty()) {
-                        logger.warn("No tests found.")
-                    }
-                    val generatedCode = bridgeMain.getCode(codeOfTests, declarations, interfaceWithOutImpl)
-                    generatedCode?.let {
-                        codeGenerator.createNewFile(
-                            dependencies = Dependencies.ALL_FILES,
-                            packageName = it.packageName,
-                            fileName = it.name,
-                        ).use {
-                                outputStream ->
-                            outputStream.write(it.code.toByteArray())
+class KspProcessor
+    @Inject
+    constructor(
+        private val logger: KSPLogger,
+        private val codeFilter: CodeFilter,
+        private val testCodeFilter: TestCodeFilter,
+        private val interfaceFinder: InterfaceFinder,
+        private val codeResolver: CodeResolver,
+        private val compileChecker: CompileChecker,
+        private val phaseResolver: PhaseResolver,
+        private val bridgeFactory: BridgeFactory,
+        private val testSourcePathResolver: TestSourcePathResolver,
+        private val codeGenerator: CodeGenerator,
+    ) : SymbolProcessor {
+        override fun process(resolver: Resolver): List<KSAnnotated> {
+            runBlocking {
+                when (phaseResolver.resolvePhase(resolver.getAllFiles().map { it.filePath }.toList())) {
+                    Phases.Main -> {
+                        // logger.warn("Main")
+                        val bridgeMain = bridgeFactory.createMain() // need here for test
+                        val interfaceWithOutImpl =
+                            interfaceFinder
+                                .getInterfacesWithOutImplementation(resolver)
+                                .firstOrNull() ?: return@runBlocking // todo # 47 only one yet
+                        val declarations = codeFilter.getFilteredCodeDeclarations(resolver, interfaceWithOutImpl)
+                        if (declarations.toList().isEmpty()) {
+                            logger.warn("No declarations found")
+                            return@runBlocking
                         }
-                    } ?: logger.warn("Code not valid")
-                }
+                        val basePath = testSourcePathResolver.getSourcesPath(resolver)
+                        val codeOfTests =
+                            testCodeFilter.getFilteredTestCode(declarations.map { it.simpleName.asString() }, basePath)
+                        if (codeOfTests.toList().isEmpty()) {
+                            logger.warn("No tests found.")
+                        }
+                        val generatedCode = bridgeMain.getCode(codeOfTests, declarations, interfaceWithOutImpl)
+                        generatedCode?.let {
+                            codeGenerator.createNewFile(
+                                dependencies = Dependencies.ALL_FILES,
+                                packageName = it.packageName,
+                                fileName = it.name,
+                            ).use {
+                                    outputStream ->
+                                outputStream.write(it.code.toByteArray())
+                            }
+                        } ?: logger.warn("Code not valid")
+                    }
 
-                Phases.Tests -> {
-                    // logger.warn("Test")
-                    val bridgeTest = bridgeFactory.createTest()
-                }
+                    Phases.Tests -> {
+                        // logger.warn("Test")
+                        val bridgeTest = bridgeFactory.createTest()
+                    }
 
-                Phases.Generated -> {
-                    // logger.warn("Generated")
-                    // for other interfaces with out implementation
+                    Phases.Generated -> {
+                        // logger.warn("Generated")
+                        // for other interfaces with out implementation
+                    }
                 }
             }
+            return emptyList()
         }
-        return emptyList()
     }
-}

@@ -1,7 +1,7 @@
 import com.code.factory.TestCodeFilter
+import com.code.factory.TestCodeFilterImpl
 import com.code.factory.TestFilesResolver
 import com.code.factory.coderesolver.CodeResolver
-import com.code.factory.testCodeFilter
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -21,7 +21,7 @@ class TestCodeFilterTest : StringSpec({
         every {
             testFilesResolver.getTestFiles(any())
         } returns sequenceOf(testFile)
-        testCodeFilter = testCodeFilter(testFilesResolver, codeResolver)
+        testCodeFilter = TestCodeFilterImpl(testFilesResolver, codeResolver)
     }
 
     val testFile =

@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.vanniktech)
     `java-gradle-plugin`
     alias(libs.plugins.ktlint)
+    kotlin("kapt")
 }
 
 group = "io.github.antonbutov"
@@ -21,15 +22,16 @@ dependencies {
     runtimeOnly(libs.ktor.okhttp)
 
     implementation(kotlin("stdlib"))
-    implementation(libs.kotlin.kspApi)
     implementation(libs.autoservice.annotations)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.tschuchortdev.testing.ksp)
 
     implementation(libs.mockk)
 
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
+
     testImplementation(kotlin("test"))
-    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotest.assertions)
     testImplementation(libs.kotest.runner.junit5.jvm)
 }
