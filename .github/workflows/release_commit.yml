@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - trunk
+    paths:
+      - "code-factory-processor/build.gradle.kts"
 
 jobs:
   release:
@@ -17,10 +19,17 @@ jobs:
         id: get_version
         run: echo "VERSION=$(sed -nE 's/^version = \"([^\"]+)\"/\1/p' code-factory-processor/build.gradle.kts)" >> $GITHUB_ENV
 
+      - name: Check if tag already exists
+        run: |
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists. Skipping release."
+            exit 0
+          fi
+
       - name: Create Git tag
         run: |
           git tag "v$VERSION"
-          git push origin "v$VERSION"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/AntonButov/code-factory.git "v$VERSION"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
