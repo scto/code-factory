@@ -1,15 +1,14 @@
 import com.code.factory.CompileChecker
-import com.code.factory.compileChecker
+import com.code.factory.CompileCheckerImpl
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
 
 class CompileCheckerTest : StringSpec({
 
     lateinit var checker: CompileChecker
 
     beforeTest {
-        checker = compileChecker(mockk(relaxed = true))
+        checker = CompileCheckerImpl()
     }
 
     "for generation should compile" {

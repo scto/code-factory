@@ -1,11 +1,13 @@
 package com.code.factory.bridge
 
+import com.code.factory.BasePathProvider
 import com.code.factory.coderesolver.CodeResolver
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
 import java.io.File
 import java.util.Properties
+import javax.inject.Inject
 
 interface BridgeFactory {
     fun createMain(): Bridge.BridgeMain
@@ -29,44 +31,40 @@ sealed interface Bridge {
     interface BridgeGenerated : Bridge
 }
 
-fun bridgeFactory(
-    codeResolver: CodeResolver,
-    logger: KSPLogger,
-    path: String,
-): BridgeFactory = BridgeFactoryImpl(codeResolver, logger, path)
+class BridgeFactoryImpl
+    @Inject
+    constructor(
+        private val codeResolver: CodeResolver,
+        private val logger: KSPLogger,
+        private val basePathProvider: BasePathProvider,
+    ) : BridgeFactory {
+        @get:JvmName("getApiKeyProperty")
+        private val apiKey: String by lazy { getApiKey() }
 
-internal class BridgeFactoryImpl(
-    private val codeResolver: CodeResolver,
-    private val logger: KSPLogger,
-    private val path: String,
-) : BridgeFactory {
-    @get:JvmName("getApiKeyProperty")
-    private val apiKey: String by lazy { getApiKey() }
+        override fun createMain(): Bridge.BridgeMain =
+            keyLogic(
+                mock = BridgeMainWork(codeResolver, openAiServiceMock(logger)),
+                work = BridgeMainWork(codeResolver, openAiService(apiKey, logger)),
+            )
 
-    override fun createMain(): Bridge.BridgeMain =
-        keyLogic(
-            mock = BridgeMainWork(codeResolver, openAiServiceMock(logger)),
-            work = BridgeMainWork(codeResolver, openAiService(apiKey, logger)),
-        )
+        override fun createTest(): Bridge.BridgeTest = BridgeTestWork()
 
-    override fun createTest(): Bridge.BridgeTest = BridgeTestWork()
+        override fun createGenerated(): Bridge.BridgeGenerated = BridgeGeneratedWork()
 
-    override fun createGenerated(): Bridge.BridgeGenerated = BridgeGeneratedWork()
-
-    private fun <B : Bridge> keyLogic(
-        mock: B,
-        work: B,
-    ): B {
-        return when (apiKey) {
-            "test" -> mock
-            else -> work
+        private fun <B : Bridge> keyLogic(
+            mock: B,
+            work: B,
+        ): B {
+            return when (apiKey) {
+                "test" -> mock
+                else -> work
+            }
         }
-    }
 
-    private fun getApiKey(): String =
-        loadLocalProperties(path).getProperty("API_KEY")
-            ?: error("API_KEY not found in local.properties")
-}
+        private fun getApiKey(): String =
+            loadLocalProperties(basePathProvider.getBasePath()).getProperty("API_KEY")
+                ?: error("API_KEY not found in local.properties")
+    }
 
 private fun loadLocalProperties(path: String): Properties {
     val properties = Properties()

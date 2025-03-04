@@ -12,5 +12,3 @@ interface CodeResolver {
 
     fun getCode(filePath: String): String
 }
-
-fun codeResolver(): CodeResolver = CodeResolverImpl()

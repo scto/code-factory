@@ -1,4 +1,4 @@
-import com.code.factory.basePathProvider
+import com.code.factory.BasePathProviderImpl
 import com.google.devtools.ksp.processing.CodeGenerator
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -13,7 +13,7 @@ class BasePathProviderTest : StringSpec({
         every {
             codeGenerator.generatedFile
         } returns listOf(File("some/path/build/path"))
-        val basePathProvider = basePathProvider(codeGenerator)
+        val basePathProvider = BasePathProviderImpl(codeGenerator)
         val result = basePathProvider.getBasePath()
 
         result shouldBe "some/path/"

@@ -1,4 +1,4 @@
-import com.code.factory.testFileResolver
+import com.code.factory.TestFilesResolverImpl
 import io.kotest.core.spec.style.StringSpec
 import kotlin.io.path.createTempDirectory
 import kotlin.test.assertEquals
@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 class TestFileResolverTest : StringSpec({
 
     "base case" {
-        val testFileResolver = testFileResolver()
+        val testFileResolver = TestFilesResolverImpl()
         val tempDir = createTempDirectory().toFile()
 
         val file1 = java.io.File(tempDir, "Test1.kt")

@@ -1,4 +1,4 @@
-import com.code.factory.testSourcePathResolver
+import com.code.factory.TestSourcePathResolverImpl
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
 import io.kotest.core.spec.style.StringSpec
@@ -22,7 +22,7 @@ class GetSourceResolverTest : StringSpec({
     }
 
     "base case" {
-        val testSourcePathResolver = testSourcePathResolver()
+        val testSourcePathResolver = TestSourcePathResolverImpl()
 
         val result = testSourcePathResolver.getSourcesPath(resolver)
         "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/test/" shouldBe result
