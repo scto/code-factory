@@ -1,4 +1,3 @@
-import com.code.factory.compilation.compilationForAssertations
 import com.code.factory.interfaceFinder
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,7 +13,7 @@ class FindInterfacesTest {
             }
             """
 
-        compilationForAssertations(source) {}
+        source compile {}
     }
 
     private val testSource = """
@@ -39,7 +38,7 @@ class FindInterfacesTest {
 
     @Test
     fun `should find two interfaces`() {
-        compilationForAssertations(testSource) { resolver ->
+        testSource compile { resolver ->
             val interfaceFinder = interfaceFinder()
             val interfaceNames =
                 interfaceFinder.getInterfacesWithOutImplementation(resolver).map {

@@ -15,8 +15,8 @@ version = "0.0.6"
 
 dependencies {
     ksp(libs.autoservice.ksp)
-    testImplementation(project(":utils"))
 
+    api(libs.compilation)
     implementation(platform(libs.openai.kotlin.bom))
     implementation(libs.openai.client)
     runtimeOnly(libs.ktor.okhttp)

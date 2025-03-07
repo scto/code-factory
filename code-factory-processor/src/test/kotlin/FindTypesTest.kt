@@ -1,6 +1,5 @@
 import com.code.factory.AllDeclarationFinder
 import com.code.factory.AllDeclarationFinderImpl
-import com.code.factory.compilation.compilationForAssertations
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import kotlin.test.assertEquals
@@ -29,7 +28,7 @@ class FindTypesTest : StringSpec({
             
             """.trimIndent()
 
-        compilationForAssertations(typeASource, mainCode) { resolver ->
+        listOf(typeASource, mainCode) compile { resolver ->
             assertEquals(listOf("A"), allDeclarationFinder.getAllDeclaration(resolver).map { it.toString() }.toList())
         }
     }
@@ -54,7 +53,7 @@ class FindTypesTest : StringSpec({
                 }
             }
             """.trimIndent()
-        compilationForAssertations(testClass) { resolver ->
+        testClass compile { resolver ->
             val declarations = allDeclarationFinder.getAllDeclaration(resolver).map { it.qualifiedName?.asString() }.toList()
             declarations shouldBe listOf("GeneratedTest")
         }
@@ -67,7 +66,7 @@ class FindTypesTest : StringSpec({
                 fun myFun()
             }
             """.trimIndent()
-        compilationForAssertations(singleInterface) { resolver ->
+        singleInterface compile { resolver ->
             val allDeclarations = allDeclarationFinder.getAllDeclaration(resolver)
             listOf("SingleInterface") shouldBe allDeclarations.map { it.toString() }.toList()
         }

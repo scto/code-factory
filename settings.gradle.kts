@@ -10,11 +10,11 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
 rootProject.name = "code-factory"
 
 include("code-factory-processor")
-include("utils")
 include("integration-test")

@@ -1,4 +1,3 @@
-import com.code.factory.compilation.compilationForAssertations
 import com.code.factory.getAllDeclarations
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -20,14 +19,14 @@ class GetAllDeclarationsTest : StringSpec({
         """.trimIndent()
 
     "should return all declarations" {
-        compilationForAssertations(someType, someClass) { resolver ->
+        listOf(someType, someClass) compile { resolver ->
             val result = resolver.getAllFiles().getAllDeclarations().map { it.qualifiedName!!.asString() }.toList()
             result shouldBe listOf("SomeType", "InterfaceWithOutDeclarations")
         }
     }
 
     "should return all declarations from interface only" {
-        compilationForAssertations(someClass) { resolver ->
+        someClass compile { resolver ->
             val result = resolver.getAllFiles().getAllDeclarations().map { it.qualifiedName!!.asString() }.toList()
             //    result shouldBe listOf("SomeType", "InterfaceWithOutDeclarations")
         }
