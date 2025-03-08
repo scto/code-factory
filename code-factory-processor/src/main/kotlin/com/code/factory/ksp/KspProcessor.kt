@@ -16,6 +16,8 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+interface WorkKspProvider : SymbolProcessor
+
 class KspProcessor
     @Inject
     constructor(
@@ -29,7 +31,7 @@ class KspProcessor
         private val bridgeFactory: BridgeFactory,
         private val testSourcePathResolver: TestSourcePathResolver,
         private val codeGenerator: CodeGenerator,
-    ) : SymbolProcessor {
+    ) : WorkKspProvider {
         override fun process(resolver: Resolver): List<KSAnnotated> {
             runBlocking {
                 when (phaseResolver.resolvePhase(resolver.getAllFiles().map { it.filePath }.toList())) {

@@ -9,11 +9,16 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 @AutoService(SymbolProcessorProvider::class)
 class KspProcessorProvider() : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
-        return DaggerProcessorComponent
-            .builder()
-            .logger(environment.logger)
-            .codeGenerator(environment.codeGenerator)
-            .build()
-            .getKSPProcessor()
+        val component =
+            DaggerProcessorComponent
+                .builder()
+                .logger(environment.logger)
+                .codeGenerator(environment.codeGenerator)
+                .build()
+
+        val apiKeyResolver = component.getApiKeyResolver()
+        return apiKeyResolver.resolve()?.let {
+            component.getKSPProcessor()
+        } ?: component.getSleepKSPProcessor()
     }
 }

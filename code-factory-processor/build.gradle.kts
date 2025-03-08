@@ -15,6 +15,7 @@ version = "0.0.6"
 
 dependencies {
     ksp(libs.autoservice.ksp)
+    // ksp(libs.code.factory)
 
     api(libs.compilation)
     implementation(platform(libs.openai.kotlin.bom))
