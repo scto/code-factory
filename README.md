@@ -20,11 +20,16 @@ API_KEY="sk-proj-mSwcp..."
 ```
 2. Kotlin (KTS)
 ```
+repositories {
+    mavenCentral()
+    maven { url = uri("https://jitpack.io") }
+}
+```
+```
 plugins {
     id("com.google.devtools.ksp") version "1.9.24-1.0.20"
 }
 ``` 
-3. Add dependencies
 ```
 dependencies {
     ksp("io.github.antonbutov:code-factory-processor:$last_version")
