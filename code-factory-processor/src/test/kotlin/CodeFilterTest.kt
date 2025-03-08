@@ -5,7 +5,6 @@ import com.code.factory.CodeFilterImpl
 import com.code.factory.InterfaceFinder
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.coderesolver.CodeResolverImpl
-import com.code.factory.compilation.compilationForAssertations
 import com.code.factory.interfaceFinder
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -43,7 +42,7 @@ class CodeFilterTest : StringSpec({
             class SecretClass {
             }
             """.trimIndent()
-        compilationForAssertations(simpleClass, interfaceWithOutDeclarations, secretClass) { resolver ->
+        listOf(simpleClass, interfaceWithOutDeclarations, secretClass) compile { resolver ->
             val interfaceWithOutDeclarations = interfaceFinder.getInterfacesWithOutImplementation(resolver).first()
             val result =
                 codeFilter.getFilteredCodeDeclarations(

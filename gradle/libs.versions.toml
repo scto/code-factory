@@ -12,6 +12,7 @@ openaiKotlinBom = "4.0.1"
 vanniktech="0.31.0"
 ktlint = "12.2.0"
 dagger = "2.55"
+compilation = "1.0.0"
 
 [libraries]
 kotlin-kspApi = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
@@ -33,6 +34,8 @@ kotest-runner-junit5-jvm = { group = "io.kotest", name = "kotest-runner-junit5-j
 
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+
+compilation = { module = "com.github.antonbutov:compilation", version.ref = "compilation" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
