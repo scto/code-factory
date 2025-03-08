@@ -1,12 +1,10 @@
 package com.code.factory.bridge
 
-import com.code.factory.BasePathProvider
+import com.code.factory.ApiKeyResolver
 import com.code.factory.coderesolver.CodeResolver
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSDeclaration
-import java.io.File
-import java.util.Properties
 import javax.inject.Inject
 
 interface BridgeFactory {
@@ -36,10 +34,10 @@ class BridgeFactoryImpl
     constructor(
         private val codeResolver: CodeResolver,
         private val logger: KSPLogger,
-        private val basePathProvider: BasePathProvider,
+        private val apiKeyResolveProvider: ApiKeyResolver,
     ) : BridgeFactory {
         @get:JvmName("getApiKeyProperty")
-        private val apiKey: String by lazy { getApiKey() }
+        private val apiKey: String by lazy { apiKeyResolveProvider.resolve() ?: error("ApiKey not found.") }
 
         override fun createMain(): Bridge.BridgeMain =
             keyLogic(
@@ -60,19 +58,4 @@ class BridgeFactoryImpl
                 else -> work
             }
         }
-
-        private fun getApiKey(): String =
-            loadLocalProperties(basePathProvider.getBasePath()).getProperty("API_KEY")
-                ?: error("API_KEY not found in local.properties")
     }
-
-private fun loadLocalProperties(path: String): Properties {
-    val properties = Properties()
-    val localPropertiesFile = File(path, "local.properties")
-    return properties
-        .takeIf {
-            localPropertiesFile.exists()
-        }?.also {
-            it.load(localPropertiesFile.inputStream())
-        } ?: error("local.properties file not found")
-}

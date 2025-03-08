@@ -12,7 +12,11 @@ interface BasePathProvider {
 class BasePathProviderImpl
     @Inject
     constructor(private val codeGenerator: CodeGenerator) : BasePathProvider {
-        override fun getBasePath(): String {
+        private val path: String by lazy { getBasePathInternal() }
+
+        override fun getBasePath(): String = path
+
+        private fun getBasePathInternal(): String {
             codeGenerator.createNewFile(Dependencies.ALL_FILES, "", "tempFile") // #61
             val emptyFile = codeGenerator.generatedFile.first()
             val emptyFilePath = emptyFile.path

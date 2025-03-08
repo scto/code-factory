@@ -7,9 +7,11 @@ import com.code.factory.coderesolver.CodeResolverImpl
 import com.code.factory.ksp.KspProcessor
 import com.code.factory.ksp.PhaseResolver
 import com.code.factory.ksp.PhaseResolverImpl
+import com.code.factory.ksp.SleepKspProcessor
+import com.code.factory.ksp.SleepKspProcessorImpl
+import com.code.factory.ksp.WorkKspProvider
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
-import com.google.devtools.ksp.processing.SymbolProcessor
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
@@ -19,6 +21,10 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [ProcessorBindModule::class])
 interface ProcessorComponent {
+    fun getApiKeyResolver(): ApiKeyResolver
+
+    fun getSleepKSPProcessor(): SleepKspProcessor
+
     fun getKSPProcessor(): KspProcessor
 
     @Component.Builder
@@ -53,6 +59,7 @@ interface ProcessorBindModule {
     @Binds
     abstract fun provideTestSourcePathResolver(impl: TestSourcePathResolverImpl): TestSourcePathResolver
 
+    @Singleton
     @Binds
     abstract fun provideBasePathProvider(impl: BasePathProviderImpl): BasePathProvider
 
@@ -63,11 +70,17 @@ interface ProcessorBindModule {
     abstract fun provideBridgeFactory(impl: BridgeFactoryImpl): BridgeFactory
 
     @Binds
-    abstract fun provideSymbolProcessor(impl: KspProcessor): SymbolProcessor
+    abstract fun provideSymbolProcessor(impl: KspProcessor): WorkKspProvider
+
+    @Binds
+    abstract fun provideSleepKspProcessor(impl: SleepKspProcessorImpl): SleepKspProcessor
 
     @Binds
     abstract fun provideInterfaceFinder(impl: InterfaceFinderImpl): InterfaceFinder
 
     @Binds
     abstract fun providePhaseResolver(impl: PhaseResolverImpl): PhaseResolver
+
+    @Binds
+    abstract fun provideApiKeyResolver(impl: ApiKeyResolverImpl): ApiKeyResolver
 }
