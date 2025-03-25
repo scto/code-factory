@@ -28,7 +28,7 @@ class GetAllDeclarationsTest : StringSpec({
     "should return all declarations from interface only" {
         someClass compile { resolver ->
             val result = resolver.getAllFiles().getAllDeclarations().map { it.qualifiedName!!.asString() }.toList()
-            //    result shouldBe listOf("SomeType", "InterfaceWithOutDeclarations")
+            result shouldBe listOf("InterfaceWithOutDeclarations")
         }
     }
 })

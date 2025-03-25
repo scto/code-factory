@@ -1,21 +1,25 @@
-import com.code.factory.BasePathProviderImpl
-import com.google.devtools.ksp.processing.CodeGenerator
+import com.code.factory.ksp.BasePathProviderImpl
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSFile
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import java.io.File
 
 class BasePathProviderTest : StringSpec({
 
     "should return base path" {
-        val codeGenerator = mockk<CodeGenerator>(relaxed = true)
+        val resolver = mockk<Resolver>()
+        val ksFile = mockk<KSFile>()
         every {
-            codeGenerator.generatedFile
-        } returns listOf(File("some/path/build/path"))
-        val basePathProvider = BasePathProviderImpl(codeGenerator)
-        val result = basePathProvider.getBasePath()
+            ksFile.filePath
+        } returns "/Users/antonbutov/StudioProjects/code-factory/integration-test/src/main/kotlin/ForGenerate.kt"
+        every {
+            resolver.getAllFiles()
+        } returns sequenceOf(ksFile)
+        val basePathProvider = BasePathProviderImpl()
+        val result = basePathProvider.getBasePath(resolver)
 
-        result shouldBe "some/path/"
+        result shouldBe "/Users/antonbutov/StudioProjects/code-factory/integration-test/"
     }
 })

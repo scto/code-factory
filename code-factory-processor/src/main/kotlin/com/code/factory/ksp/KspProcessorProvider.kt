@@ -16,9 +16,6 @@ class KspProcessorProvider() : SymbolProcessorProvider {
                 .codeGenerator(environment.codeGenerator)
                 .build()
 
-        val apiKeyResolver = component.getApiKeyResolver()
-        return apiKeyResolver.resolve()?.let {
-            component.getKSPProcessor()
-        } ?: component.getSleepKSPProcessor()
+        return component.getKSPProcessor()
     }
 }

@@ -1,11 +1,13 @@
 package com.code.factory
 
+import com.code.factory.ksp.BasePathProvider
+import com.google.devtools.ksp.processing.Resolver
 import java.io.File
 import java.util.Properties
 import javax.inject.Inject
 
 interface ApiKeyResolver {
-    fun resolve(): String?
+    fun resolve(resolver: Resolver): String?
 }
 
 class ApiKeyResolverImpl
@@ -13,7 +15,8 @@ class ApiKeyResolverImpl
     constructor(
         private val basePathProvider: BasePathProvider,
     ) : ApiKeyResolver {
-        override fun resolve(): String? = loadLocalProperties(basePathProvider.getBasePath())?.getProperty("API_KEY")
+        override fun resolve(resolver: Resolver): String? =
+            loadLocalProperties(basePathProvider.getBasePath(resolver)!!)?.getProperty("API_KEY")
 
         private fun loadLocalProperties(path: String): Properties? {
             val localPropertiesFile = File(path, "local.properties")
