@@ -2,6 +2,8 @@ package com.code.factory
 
 import com.code.factory.bridge.BridgeFactory
 import com.code.factory.bridge.BridgeFactoryImpl
+import com.code.factory.bridge.Packager
+import com.code.factory.bridge.PackagerImpl
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.coderesolver.CodeResolverImpl
 import com.code.factory.ksp.BasePathProvider
@@ -96,4 +98,7 @@ interface ProcessorBindModule {
             apiKey: String,
         ): WorkActorImpl
     }
+
+    @Binds
+    abstract fun providePackager(impl: PackagerImpl): Packager
 }

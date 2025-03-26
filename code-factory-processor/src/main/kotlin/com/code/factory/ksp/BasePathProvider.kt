@@ -7,7 +7,6 @@ interface BasePathProvider {
     fun getBasePath(resolver: Resolver): String?
 }
 
-// #62
 class BasePathProviderImpl
     @Inject
     constructor() : BasePathProvider {

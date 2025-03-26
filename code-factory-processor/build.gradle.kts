@@ -2,11 +2,10 @@ import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     alias(libs.plugins.ksp)
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
     id("maven-publish")
     alias(libs.plugins.vanniktech)
     `java-gradle-plugin`
-    alias(libs.plugins.ktlint)
     kotlin("kapt")
 }
 
@@ -37,25 +36,16 @@ dependencies {
     testImplementation(libs.kotest.runner.junit5.jvm)
 }
 
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
-}
-tasks.named("build") {
-    dependsOn("ktlintFormat")
-}
+private val buildDirectory = project.rootProject.layout.buildDirectory.asFile.get()
 
-tasks.named("test") {
-    dependsOn("ktlintFormat")
-}
-
-ktlint {
-    debug.set(false)
-    android.set(false)
-    ignoreFailures.set(true)
-    reporters {
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+ publishing {
+    repositories {
+        maven {
+            name = "localBuild"
+            url = buildDirectory.resolve("localMaven").toURI()
+        }
     }
-}
+ }
 
 mavenPublishing {
     coordinates(
@@ -66,7 +56,9 @@ mavenPublishing {
 
     mavenPublishing {
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-        signAllPublications()
+        if (project.findProperty("signing") == "true") {
+            signAllPublications()
+        }
     }
 
     pom {
@@ -97,9 +89,42 @@ mavenPublishing {
     }
 }
 
+private val buildConfig = "${project.layout.buildDirectory.asFile.get().path}/generated/buildConfig"
+
+sourceSets["main"].kotlin.srcDir(buildConfig)
+
+tasks.register("generateBuildConfig") {
+    doLast {
+        val file = file("$buildConfig/BuildConfig.kt")
+        file.parentFile.mkdirs()
+        file.writeText(
+            """
+            object BuildConfig {
+                const val KOTLIN_VERSION = "${libs.versions.kotlin.get()}"
+                const val KSP_VERSION = "${libs.versions.ksp.get()}"
+                const val PROCESSOR_VERSION = "$version"
+            }
+            """.trimIndent(),
+        )
+    }
+}
+
+tasks.named("build") {
+    dependsOn("generateBuildConfig")
+}
+tasks.named("test") {
+    dependsOn("generateBuildConfig")
+}
+ tasks.named("build") {
+    dependsOn(":code-factory-processor:publishToMavenLocal")
+ }
+ tasks.named("test") {
+    dependsOn(":code-factory-processor:publishToMavenLocal")
+ }
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
     jvmToolchain(17)
 }

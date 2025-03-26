@@ -26,7 +26,7 @@ class CodeFilterImpl
             val codeInterfaceWithOutDeclarationCode = codeResolver.getCodeString(interfaceWithOutDeclaration)
             return getAllDeclarationFinder.getAllDeclaration(resolver)
                 .filter {
-                    it.qualifiedName!!.asString() in codeInterfaceWithOutDeclarationCode
+                    it.simpleName.getShortName() in codeInterfaceWithOutDeclarationCode
                 }
         }
     }

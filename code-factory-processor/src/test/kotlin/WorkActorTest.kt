@@ -5,6 +5,7 @@ import com.code.factory.InterfaceFinder
 import com.code.factory.TestCodeFilter
 import com.code.factory.TestSourcePathResolver
 import com.code.factory.bridge.BridgeFactory
+import com.code.factory.bridge.Packager
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.ksp.PhaseResolver
 import com.code.factory.ksp.Phases
@@ -33,6 +34,7 @@ class WorkActorTest : StringSpec({
     lateinit var testSourcePathResolver: TestSourcePathResolver
     lateinit var codeGenerator: CodeGenerator
     lateinit var workActor: WorkActorImpl
+    lateinit var packager: Packager
 
     beforeTest {
         bridgeFactory = mockk(relaxed = true)
@@ -54,6 +56,7 @@ class WorkActorTest : StringSpec({
         testCodeFilter = mockk(relaxed = true)
         testSourcePathResolver = mockk(relaxed = true)
         codeGenerator = mockk(relaxed = true)
+        packager = mockk(relaxed = true)
         workActor =
             WorkActorImpl(
                 phaseResolver = phaseResolver,
@@ -66,6 +69,7 @@ class WorkActorTest : StringSpec({
                 logger = mockk(relaxed = true),
                 resolver = resolver,
                 apiKey = "apiKey",
+                packager = packager,
             )
     }
 

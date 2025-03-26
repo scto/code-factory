@@ -17,4 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "code-factory"
 
 include("code-factory-processor")
-include("integration-test")
+include("sample")
+include("integration-tests")
