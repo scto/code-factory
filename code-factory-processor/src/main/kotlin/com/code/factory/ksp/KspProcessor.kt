@@ -1,19 +1,10 @@
 package com.code.factory.ksp
 
-import com.code.factory.CodeFilter
-import com.code.factory.CompileChecker
-import com.code.factory.InterfaceFinder
-import com.code.factory.TestCodeFilter
-import com.code.factory.TestSourcePathResolver
-import com.code.factory.bridge.BridgeFactory
-import com.code.factory.coderesolver.CodeResolver
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.Dependencies
-import com.google.devtools.ksp.processing.KSPLogger
+import com.code.factory.ApiKeyResolver
+import com.code.factory.ProcessorBindModule
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 interface WorkKspProvider : SymbolProcessor
@@ -21,62 +12,16 @@ interface WorkKspProvider : SymbolProcessor
 class KspProcessor
     @Inject
     constructor(
-        private val logger: KSPLogger,
-        private val codeFilter: CodeFilter,
-        private val testCodeFilter: TestCodeFilter,
-        private val interfaceFinder: InterfaceFinder,
-        private val codeResolver: CodeResolver,
-        private val compileChecker: CompileChecker,
-        private val phaseResolver: PhaseResolver,
-        private val bridgeFactory: BridgeFactory,
-        private val testSourcePathResolver: TestSourcePathResolver,
-        private val codeGenerator: CodeGenerator,
+        private val workActorFactory: ProcessorBindModule.WorkActorFactory,
+        private val sleepKspProcessor: SleepKspProcessor,
+        private val apiKeyResolver: ApiKeyResolver,
     ) : WorkKspProvider {
         override fun process(resolver: Resolver): List<KSAnnotated> {
-            runBlocking {
-                when (phaseResolver.resolvePhase(resolver.getAllFiles().map { it.filePath }.toList())) {
-                    Phases.Main -> {
-                        // logger.warn("Main")
-                        val bridgeMain = bridgeFactory.createMain() // need here for test
-                        val interfaceWithOutImpl =
-                            interfaceFinder
-                                .getInterfacesWithOutImplementation(resolver)
-                                .firstOrNull() ?: return@runBlocking // todo # 47 only one yet
-                        val declarations = codeFilter.getFilteredCodeDeclarations(resolver, interfaceWithOutImpl)
-                        if (declarations.toList().isEmpty()) {
-                            logger.warn("No declarations found")
-                            return@runBlocking
-                        }
-                        val basePath = testSourcePathResolver.getSourcesPath(resolver)
-                        val codeOfTests =
-                            testCodeFilter.getFilteredTestCode(declarations.map { it.simpleName.asString() }, basePath)
-                        if (codeOfTests.toList().isEmpty()) {
-                            logger.warn("No tests found.")
-                        }
-                        val generatedCode = bridgeMain.getCode(codeOfTests, declarations, interfaceWithOutImpl)
-                        generatedCode?.let {
-                            codeGenerator.createNewFile(
-                                dependencies = Dependencies.ALL_FILES,
-                                packageName = it.packageName,
-                                fileName = it.name,
-                            ).use {
-                                    outputStream ->
-                                outputStream.write(it.code.toByteArray())
-                            }
-                        } ?: logger.warn("Code not valid")
-                    }
-
-                    Phases.Tests -> {
-                        // logger.warn("Test")
-                        val bridgeTest = bridgeFactory.createTest()
-                    }
-
-                    Phases.Generated -> {
-                        // logger.warn("Generated")
-                        // for other interfaces with out implementation
-                    }
-                }
-            }
-            return emptyList()
+            val apiKey = apiKeyResolver.resolve(resolver)
+            return apiKey?.let {
+                workActorFactory
+                    .create(resolver, apiKey)
+                    .act()
+            } ?: sleepKspProcessor.process(resolver)
         }
     }

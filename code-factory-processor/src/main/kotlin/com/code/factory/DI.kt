@@ -4,18 +4,23 @@ import com.code.factory.bridge.BridgeFactory
 import com.code.factory.bridge.BridgeFactoryImpl
 import com.code.factory.coderesolver.CodeResolver
 import com.code.factory.coderesolver.CodeResolverImpl
+import com.code.factory.ksp.BasePathProvider
+import com.code.factory.ksp.BasePathProviderImpl
 import com.code.factory.ksp.KspProcessor
 import com.code.factory.ksp.PhaseResolver
 import com.code.factory.ksp.PhaseResolverImpl
 import com.code.factory.ksp.SleepKspProcessor
 import com.code.factory.ksp.SleepKspProcessorImpl
+import com.code.factory.ksp.WorkActorImpl
 import com.code.factory.ksp.WorkKspProvider
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.Resolver
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
+import dagger.assisted.AssistedFactory
 import javax.inject.Singleton
 
 @Singleton
@@ -83,4 +88,12 @@ interface ProcessorBindModule {
 
     @Binds
     abstract fun provideApiKeyResolver(impl: ApiKeyResolverImpl): ApiKeyResolver
+
+    @AssistedFactory
+    interface WorkActorFactory {
+        fun create(
+            resolver: Resolver,
+            apiKey: String,
+        ): WorkActorImpl
+    }
 }
