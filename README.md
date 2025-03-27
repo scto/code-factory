@@ -103,7 +103,7 @@ Code Factory is built with the following technologies:
 - **Test-Driven Development (TDD)** using [Kotest](https://kotest.io/) – `io.kotest:kotest`
 - **AI Integration** with [OpenAI API](https://github.com/aallam/openai-kotlin) – `com.aallam.openai:openai`
 - **Code Quality** enforced with [ktlint](https://github.com/pinterest/ktlint)  
-- **Code Generation** using [KSP (Kotlin Symbol Processing)](https://github.com/google/ksp)  
+- **PR Generation** https://github.com/qodo-ai/pr-agenthttps://github.com/qodo-ai/pr-agent
 
 ## Contributions Welcome! 
 We follow best practices to ensure a robust and maintainable codebase. Contributions are welcome! 🚀 
