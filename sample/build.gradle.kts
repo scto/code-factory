@@ -12,8 +12,4 @@ dependencies {
     ksp(project(":code-factory-processor"))
 
     testImplementation(kotlin("test"))
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.kotest.assertions)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotest.runner.junit5.jvm)
 }

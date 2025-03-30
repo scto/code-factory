@@ -5,6 +5,7 @@ import com.code.factory.InterfaceFinder
 import com.code.factory.TestCodeFilter
 import com.code.factory.TestSourcePathResolver
 import com.code.factory.bridge.BridgeFactory
+import com.code.factory.bridge.Packager
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
@@ -33,9 +34,9 @@ class WorkActorImpl
         private val logger: KSPLogger,
         @Assisted private val resolver: Resolver,
         @Assisted private val apiKey: String,
+        private val packager: Packager,
     ) : Actor {
         override fun act(): List<KSAnnotated> {
-            logger.warn("Work actor act.")
             runBlocking {
                 when (phaseResolver.resolvePhase(resolver.getAllFiles().map { it.filePath }.toList())) {
                     Phases.Main -> {
@@ -58,14 +59,20 @@ class WorkActorImpl
                         }
                         val generatedCode = bridgeMain.getCode(codeOfTests, declarations, interfaceWithOutImpl)
                         generatedCode?.let {
+                            val packageName = it.packageName.takeIf { it.isNotBlank() }
+                            val codeWithPackage =
+                                packageName?.let {
+                                    packager.addPackage(generatedCode.code, it)
+                                } ?: generatedCode.code
                             codeGenerator.createNewFile(
                                 dependencies = Dependencies.ALL_FILES,
                                 packageName = it.packageName,
                                 fileName = it.name,
-                            ).use {
-                                    outputStream ->
-                                outputStream.write(it.code.toByteArray())
+                            ).use { outputStream ->
+                                outputStream.write(codeWithPackage.toByteArray())
                             }
+                            val packageForLog = packageName?.let { "$it." } ?: ""
+                            logger.warn("New class: ${packageForLog}${it.name} was generated.")
                         } ?: logger.warn("Code not valid")
                     }
 
@@ -76,7 +83,6 @@ class WorkActorImpl
 
                     Phases.Generated -> {
                         // logger.warn("Generated")
-                        // for other interfaces with out implementation
                     }
                 }
             }
