@@ -32,7 +32,7 @@ plugins {
 ``` 
 ```
 dependencies {
-    ksp("io.github.antonbutov:code-factory-processor:$last_version")
+    ksp("io.github.antonbutov:code-factory-processor:1.0.0")
 }
 ```
 ## How it works
