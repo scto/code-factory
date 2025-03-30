@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.antonbutov"
-version = "0.0.7"
+version = "1.0.0"
 
 dependencies {
     ksp(libs.autoservice.ksp)
