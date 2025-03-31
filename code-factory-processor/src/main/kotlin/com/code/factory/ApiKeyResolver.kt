@@ -16,7 +16,9 @@ class ApiKeyResolverImpl
         private val basePathProvider: BasePathProvider,
     ) : ApiKeyResolver {
         override fun resolve(resolver: Resolver): String? =
-            loadLocalProperties(basePathProvider.getBasePath(resolver)!!)?.getProperty("API_KEY")
+            basePathProvider.getBasePath(resolver)?.let {
+                loadLocalProperties(it)?.getProperty("API_KEY")
+            }
 
         private fun loadLocalProperties(path: String): Properties? {
             val localPropertiesFile = File(path, "local.properties")

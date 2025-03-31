@@ -17,7 +17,7 @@ class BasePathProviderTest : StringSpec({
         every {
             resolver.getAllFiles()
         } returns sequenceOf(ksFile)
-        val basePathProvider = BasePathProviderImpl()
+        val basePathProvider = BasePathProviderImpl(mockk(relaxed = true))
         val result = basePathProvider.getBasePath(resolver)
 
         result shouldBe "/Users/antonbutov/StudioProjects/code-factory/integration-test/"

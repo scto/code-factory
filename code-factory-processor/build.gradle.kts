@@ -38,14 +38,14 @@ dependencies {
 
 private val buildDirectory = project.rootProject.layout.buildDirectory.asFile.get()
 
- publishing {
+publishing {
     repositories {
         maven {
             name = "localBuild"
             url = buildDirectory.resolve("localMaven").toURI()
         }
     }
- }
+}
 
 mavenPublishing {
     coordinates(
@@ -115,12 +115,12 @@ tasks.named("build") {
 tasks.named("test") {
     dependsOn("generateBuildConfig")
 }
- tasks.named("build") {
+tasks.named("build") {
     dependsOn(":code-factory-processor:publishToMavenLocal")
- }
- tasks.named("test") {
+}
+tasks.named("test") {
     dependsOn(":code-factory-processor:publishToMavenLocal")
- }
+}
 tasks.test {
     useJUnitPlatform()
 }
