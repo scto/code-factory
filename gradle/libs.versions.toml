@@ -13,7 +13,7 @@ vanniktech="0.31.0"
 ktlint = "12.2.0"
 dagger = "2.55"
 compilation = "2.0.0"
-codeFactoryMaven = "0.0.7"
+codeFactoryMaven = "1.0.0"
 
 [libraries]
 kotlin-kspApi = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
