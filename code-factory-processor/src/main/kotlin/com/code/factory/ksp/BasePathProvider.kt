@@ -18,8 +18,6 @@ class BasePathProviderImpl
             if (allFiles.toList().isEmpty()) { // for diagnostic that case https://github.com/AntonButov/code-factory/issues/149
                 logger.warn("No files found")
             }
-            return allFiles.firstOrNull()?.filePath?.let {
-                return it.split("src").first()
-            }
+            return allFiles.firstOrNull()?.filePath?.split("src")?.first()
         }
     }
